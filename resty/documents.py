@@ -1,6 +1,20 @@
 import json
 
 
+class Properties(object):
+    def __init__(self, data, prefix='$'):
+        self.data = data
+        self.prefix = prefix
+
+    def __getattribute__(self, name):
+        try:
+            return object.__getattribute__(self, name)
+        except AttributeError:
+            if self.prefix+name in self.data:
+                object.__setattr__(self, name, self.data[self.prefix+name])
+            return object.__getattribute__(self, name)
+
+
 class JsonDocument(object):
     def __init__(self, data):
         self._data = json.loads(data)
@@ -8,8 +22,8 @@ class JsonDocument(object):
 
         self.type = self._data['$type']
         self.self = self._data['$self']
-        self.meta = dotdictify(self._data)
-        self.content = dotdictify(self._data)
+        self.meta = Properties(self._data)
+        self.content = Properties(self._data, prefix='')
 
     def _is_valid(self):
         if not self._data:
