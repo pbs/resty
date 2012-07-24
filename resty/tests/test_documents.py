@@ -60,7 +60,7 @@ class DummyStateMachine(object):
 
 class TestLazyDocument(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
         self.sm = DummyStateMachine()
         dummy_json_object = json.dumps({
             '$type': 'T',
