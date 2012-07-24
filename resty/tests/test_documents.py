@@ -46,6 +46,15 @@ class TestJsonDocument(unittest.TestCase):
         self.assertEqual(d.content.a, 'a')
         self.assertEqual(d.content.b, 'b')
 
+    def test_attr_errors(self):
+        d = self._make_one(
+            meta={'type': 'type', 'self': 'self', 'a': 'a'}, content={'b': 'b'}
+        )
+        self.assertEqual(d.meta.a, 'a')
+        self.assertEqual(d.content.b, 'b')
+        self.assertRaises(AttributeError, getattr, d.content, 'a')
+        self.assertRaises(AttributeError, getattr, d.meta, 'b')
+
 
 class DummyStateMachine(object):
     def __init__(self):
