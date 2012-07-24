@@ -1,8 +1,5 @@
-import json
-
-
 class Properties(object):
-    def __init__(self, data, prefix='$'):
+    def __init__(self, data, prefix=''):
         self.data = data
         self.prefix = prefix
 
@@ -15,36 +12,38 @@ class Properties(object):
             return object.__getattribute__(self, name)
 
 
-class JsonDocument(object):
+class DictDocument(object):
     def __init__(self, data):
-        self._data = json.loads(data)
-        self._is_valid()
+        self._data = self._validated(data)
 
         self.type = self._data['$type']
         self.self = self._data['$self']
-        self.meta = Properties(self._data)
-        self.content = Properties(self._data, prefix='')
 
-    def _is_valid(self):
-        if not self._data:
+        self.meta = Properties(self._data, prefix='$')
+        self.content = Properties(self._data)
+
+    def _validated(self, data):
+        if not data:
             raise ValueError
 
         required = ['$type', '$self']
         for r in required:
-            if r not in self._data:
+            if r not in data:
                 raise ValueError
 
+        return data
 
-class Resource(JsonDocument):
+
+class Resource(DictDocument):
     def __init__(self, data):
         super(Resource, self).__init__(data)
 
 
-class Collection(JsonDocument):
+class Collection(DictDocument):
     def __init__(self, data):
         super(Collection, self).__init__(data)
 
 
-class Service(JsonDocument):
+class Service(DictDocument):
     def __init__(self, data):
         super(Service, self).__init__(data)
