@@ -114,6 +114,11 @@ class TestLazyDocument(unittest.TestCase):
         self.assertEqual(d.meta.b, 'b')
 
     def test_attr_error(self):
-        d = self._make_one(meta={'type': 'T', 'self': 'test://partial_object'})
+        d = self._make_one(
+            meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
+            content={'a': 'aa'}
+        )
         self.assertRaises(AttributeError, getattr, d.content, 'not_existing')
         self.assertRaises(AttributeError, getattr, d.meta, 'not_existing')
+        self.assertRaises(AttributeError, getattr, d.meta, 'a')
+        self.assertRaises(AttributeError, getattr, d.content, 'b')
