@@ -55,6 +55,15 @@ class TestJsonDocument(unittest.TestCase):
         self.assertRaises(AttributeError, getattr, d.content, 'a')
         self.assertRaises(AttributeError, getattr, d.meta, 'b')
 
+    def test_complex_structure(self):
+        d = self._make_one(
+            meta={'type': 'type', 'self': 'self'},
+            content={'a': [1, 'a'], 'b': {'x': 'x', 1: 1}}
+        )
+        self.assertEqual(d.content.a, [1, 'a'])
+        self.assertEqual(d.content.b, {'x': 'x', 1: 1})
+        self.assertRaises(AttributeError, getattr, d.content.b, 'x')
+
 
 class DummyStateMachine(object):
 
