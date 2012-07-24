@@ -29,7 +29,7 @@ class TestJsonDocument(unittest.TestCase):
             meta={'type': 'type'}
         )
         self.assertRaises(ValueError, self._make_one,
-            meta={'$self': 'self'}
+            meta={'self': 'self'}
         )
 
     def test_minimal_doc(self):
