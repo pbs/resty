@@ -57,6 +57,7 @@ class TestJsonDocument(unittest.TestCase):
 
 
 class DummyStateMachine(object):
+
     def __init__(self):
         self._data = {}
 
