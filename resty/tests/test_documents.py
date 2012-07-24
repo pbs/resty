@@ -33,14 +33,14 @@ class TestJsonDocument(unittest.TestCase):
         self.assertEqual(d.self, 'self')
 
     def test_meta_attrs(self):
-        d = self._make_shortcut(
+        d = self._make_one(
             meta={'type': 'type', 'self': 'self', 'a': 'a', 'b': 'b'}
         )
         self.assertEqual(d.meta.a, 'a')
         self.assertEqual(d.meta.b, 'b')
 
     def test_content_attrs(self):
-        d = self._make_shortcut(
+        d = self._make_one(
             meta={'type': 'type', 'self': 'self'}, content={'a': 'a', 'b': 'b'}
         )
         self.assertEqual(d.content.a, 'a')
