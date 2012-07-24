@@ -1,17 +1,21 @@
-import json
 import unittest2 as unittest
 
+from resty.tests.mocks import MockStateMachine
 
-class TestJsonDocument(unittest.TestCase):
+
+class TestDictDocument(unittest.TestCase):
 
     def _get_target(self):
-        from resty.documents import JsonDocument
-        return JsonDocument
+        from resty.documents import DictDocument
+        return DictDocument
 
-    def _make_one(self, meta={}, content={}):
+    def _create_repr(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
         meta_copy.update(content)
-        return self._get_target()(json.dumps(meta_copy))
+        return meta_copy
+
+    def _make_one(self, meta={}, content={}):
+        return self._get_target()(self._create_repr(meta, content))
 
     def test_empty_json(self):
         self.assertRaises(ValueError, self._make_one)
@@ -64,28 +68,41 @@ class TestJsonDocument(unittest.TestCase):
         self.assertEqual(d.content.b, {'x': 'x', 1: 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
+    def test_subdocument(self):
+        sub_doc = self._create_repr(
+            meta={'type': 'T', 'self': 'self', 'a': 'a'},
+            content={'b': 'b'}
+        )
+        d = self._make_one(
+            meta={'type': 'T', 'self': 'self', 'sd': sub_doc}
+        )
+        sd = d.subdocument('sd')
+        self.assertEqual(sd.meta.a, 'a')
+        self.assertEqual(sd.content.b, 'b')
 
-class DummyStateMachine(object):
+    def test_subclass_subdocument(self):
 
-    def __init__(self):
-        self._data = {}
+        class MockDocument(self._get_target()):
+            def __init__(self, captured=None):
+                self.caputred = captured
 
-    def transition_to(self, next_state):
-        return self._data[next_state]
+            def _sub_document(self, attr):
+                return '%s SD'
 
-    def add_state(self, state_id, state_content):
-        self._data[state_id] = state_content
+        d = MockDocument()
+        sd = d.subdocument('test')
+        self.assertEqual(sd.caputerd, 'test SD')
 
 
 class TestLazyDocument(unittest.TestCase):
 
     def setUp(self):
-        self.sm = DummyStateMachine()
-        dummy_json_object = json.dumps({
+        self.sm = MockStateMachine()
+        dummy_json_object = {
             '$type': 'T',
             '$self': 'test://partial_object',
             'a': 'a', '$b': 'b', 'x': 'x',
-        })
+        }
         self.sm.add_state('test://partial_object', dummy_json_object)
 
     def _get_target(self):
@@ -118,7 +135,7 @@ class TestLazyDocument(unittest.TestCase):
             meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
             content={'a': 'aa'}
         )
-        self.assertRaises(AttributeError, getattr, d.content, 'not_existing')
-        self.assertRaises(AttributeError, getattr, d.meta, 'not_existing')
+        self.assertRaises(AttributeError, getattr, d.content, 'not_found')
+        self.assertRaises(AttributeError, getattr, d.meta, 'not_found')
         self.assertRaises(AttributeError, getattr, d.meta, 'a')
         self.assertRaises(AttributeError, getattr, d.content, 'b')
