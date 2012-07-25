@@ -28,6 +28,7 @@ class DictDocument(object):
     def _validated(self, data):
         if not data:
             raise ValueError
+
         required = ['$type', '$self']
         for r in required:
             if r not in data:
