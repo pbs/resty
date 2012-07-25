@@ -10,7 +10,7 @@ class TestDictDocument(unittest.TestCase):
     def _make_one(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
         meta_copy.update(content)
-        return self._get_target()(meta_copy, content)
+        return self._get_target()(meta_copy)
 
     def test_empty_json(self):
         self.assertRaises(ValueError, self._make_one)
