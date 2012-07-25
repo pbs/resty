@@ -56,10 +56,13 @@ class DictDocument(object):
         raise ValueError
 
     def get_service_data(self, name):
-        return ''
+        data = self.meta.services.get(name)
+        if not data:
+            raise ValueError
+        return data
 
     def get_items(self):
-        return []
+        return [item for item in self.meta.items]
 
 
 class Resource(DictDocument):
