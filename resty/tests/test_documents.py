@@ -96,7 +96,7 @@ class TestDictDocument(unittest.TestCase):
             },
         )
 
-        data = d.get_related_data(d, 'r1')
+        data = d.get_related_data('r1')
         self.assertEqual(data, {'a': 'a', '$b': 'b'})
 
         self.assertRaises(ValueError, d.get_related_data, 'r2')
