@@ -19,8 +19,8 @@ class DictDocument(object):
     def __init__(self, data):
         self._data = self._validated(data)
 
-        self.type = self._data['$type']
-        self.self = self._data['$self']
+        self.type = self._data.pop('$type')
+        self.self = self._data.pop('$self')
 
         self.meta = Properties(self._data, prefix='$')
         self.content = Properties(self._data)
