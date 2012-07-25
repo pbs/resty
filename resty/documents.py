@@ -47,7 +47,7 @@ class DictDocument(object):
         return data
 
     def get_items(self):
-        return []
+        return [item for item in self.meta.items]
 
 
 class Resource(DictDocument):
