@@ -33,6 +33,15 @@ class DictDocument(object):
 
         return data
 
+    def get_related_data(self, name):
+        return ''
+
+    def get_service_data(self, name):
+        return ''
+
+    def get_items(self):
+        return []
+
 
 class Resource(DictDocument):
     def __init__(self, data):
