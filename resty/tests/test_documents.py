@@ -101,9 +101,9 @@ class TestDictDocument(unittest.TestCase):
 
         self.assertRaises(ValueError, d.get_related_data, 'r2')
         data = d.get_related_data('r2', 'C1')
-        self.assertEqual(data, {'c': 1})
+        self.assertEqual(data, {'c': 1, '$class': 'C1'})
         data = d.get_related_data('r2', 'C2')
-        self.assertEqual(data, {'c': 2})
+        self.assertEqual(data, {'c': 2, '$class': 'C2'})
 
     def test_services(self):
         d = self._make_one(
