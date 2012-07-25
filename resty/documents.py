@@ -41,7 +41,10 @@ class DictDocument(object):
         return ''
 
     def get_service_data(self, name):
-        return ''
+        data = self.meta.services.get(name)
+        if not data:
+            raise ValueError
+        return data
 
     def get_items(self):
         return []
