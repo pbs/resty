@@ -1,6 +1,6 @@
 import unittest2 as unittest
 
-from resty.tests.mocks import MockStateMachine
+from resty.tests.mocks import MockStateMachine, MockDocument
 
 
 class TestDictDocument(unittest.TestCase):
@@ -82,14 +82,14 @@ class TestDictDocument(unittest.TestCase):
 
     def test_subclass_subdocument(self):
 
-        class MockDocument(self._get_target()):
+        class MD(self._get_target()):
             def __init__(self, captured=None):
                 self.caputred = captured
 
             def _sub_document(self, attr):
                 return '%s SD'
 
-        d = MockDocument()
+        d = MD()
         sd = d.subdocument('test')
         self.assertEqual(sd.caputerd, 'test SD')
 
@@ -98,12 +98,8 @@ class TestLazyDocument(unittest.TestCase):
 
     def setUp(self):
         self.sm = MockStateMachine()
-        dummy_json_object = {
-            '$type': 'T',
-            '$self': 'test://partial_object',
-            'a': 'a', '$b': 'b', 'x': 'x',
-        }
-        self.sm.add_state('test://partial_object', dummy_json_object)
+        doc = MockDocument(meta={'b': 'b'}, content={'a': 'a', 'x': 'x'})
+        self.sm.add_state('test://partial_object', doc)
 
     def _get_target(self):
         from resty.documents import LazyDocument

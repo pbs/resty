@@ -1,14 +1,14 @@
 class MockDocument(object):
 
-    def __init__(self, meta={}, attrs={}):
+    def __init__(self, meta={}, content={}):
 
-        self.type = 'T'
-        self.self = 'test://mock_document'
+        self.type = meta.pop('type', 'T')
+        self.self = meta.pop('self', 'test://mock_document')
 
         self.meta = object()
         self.content = object()
         self.meta.__dict__.update(meta)
-        self.content.__dict__.update(attrs)
+        self.content.__dict__.update(content)
 
 
 class MockStateMachine(object):
