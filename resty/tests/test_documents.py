@@ -83,6 +83,27 @@ class TestDictDocument(unittest.TestCase):
         f = d.get_filter_uri(d, 'filter2')
         self.assertEqual(f, 'f2')
 
+    def test_links(self):
+        d = self._make_one(
+            meta={
+                'type': 'type',
+                'self': 'self',
+                'links': [
+                    {'$relationship': 'r1', 'a': 'a', '$b': 'b'},
+                    {'$relationship': 'r2', 'c': 1, '$class': 'C1'},
+                    {'$relationship': 'r2', 'c': 2, '$class': 'C2'},
+                ],
+            },
+        )
+
+        data = d.get_related_data(d, 'r1')
+        self.assertEqual(data, {'a': 'a', '$b': 'b'})
+        self.assertRaises(ValueError, d.get_related_data, d, 'r2')
+        data = d.get_related_data(d, 'r2', 'C1')
+        self.assertEqual(data, {'c': 1})
+        data = d.get_related_data(d, 'r2', 'C2')
+        self.assertEqual(data, {'c': 2})
+
 
 # from resty.tests.mocks import MockStateMachine, MockDocument
 
