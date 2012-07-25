@@ -1,8 +1,5 @@
-import json
-
-
 class Properties(object):
-    def __init__(self, data, prefix='$'):
+    def __init__(self, data, prefix=''):
         self.data = data
         self.prefix = prefix
 
@@ -15,64 +12,38 @@ class Properties(object):
             return object.__getattribute__(self, name)
 
 
-class JsonDocument(object):
+class DictDocument(object):
     def __init__(self, data):
-        self._data = json.loads(data)
-        self._is_valid()
+        self._data = self._validated(data)
 
         self.type = self._data['$type']
         self.self = self._data['$self']
-        self.meta = Properties(self._data)
-        self.content = Properties(self._data, prefix='')
 
-    def _is_valid(self):
-        if not self._data:
+        self.meta = Properties(self._data, prefix='$')
+        self.content = Properties(self._data)
+
+    def _validated(self, data):
+        if not data:
             raise ValueError
 
         required = ['$type', '$self']
         for r in required:
-            if r not in self._data:
+            if r not in data:
                 raise ValueError
 
+        return data
 
-class Resource(JsonDocument):
+
+class Resource(DictDocument):
     def __init__(self, data):
         super(Resource, self).__init__(data)
 
 
-class Collection(JsonDocument):
+class Collection(DictDocument):
     def __init__(self, data):
         super(Collection, self).__init__(data)
 
 
-class Service(JsonDocument):
+class Service(DictDocument):
     def __init__(self, data):
         super(Service, self).__init__(data)
-
-
-class dotdictify(dict):
-    marker = object()
-    def __init__(self, value=None):
-        if value is None:
-            pass
-        elif isinstance(value, dict):
-            for key in value:
-                self.__setitem__(key, value[key])
-        else:
-            raise TypeError, 'expected dict'
-
-    def __setitem__(self, key, value):
-        if isinstance(value, dict) and not isinstance(value, dotdictify):
-            value = dotdictify(value)
-        key = key.replace('$', '')
-        dict.__setitem__(self, key, value)
-
-    def __getitem__(self, key):
-        found = self.get(key, dotdictify.marker)
-        if found is dotdictify.marker:
-            found = dotdictify()
-            dict.__setitem__(self, key, found)
-        return found
-
-    __setattr__ = __setitem__
-    __getattr__ = __getitem__
