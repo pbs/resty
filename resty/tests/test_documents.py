@@ -1,7 +1,5 @@
 import unittest2 as unittest
 
-from resty.tests.mocks import MockStateMachine, MockDocument
-
 
 class TestDictDocument(unittest.TestCase):
 
@@ -9,13 +7,10 @@ class TestDictDocument(unittest.TestCase):
         from resty.documents import DictDocument
         return DictDocument
 
-    def _create_repr(self, meta={}, content={}):
+    def _make_one(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
         meta_copy.update(content)
-        return meta_copy
-
-    def _make_one(self, meta={}, content={}):
-        return self._get_target()(self._create_repr(meta, content))
+        return self._get_target()(meta_copy, content)
 
     def test_empty_json(self):
         self.assertRaises(ValueError, self._make_one)
@@ -70,70 +65,67 @@ class TestDictDocument(unittest.TestCase):
         self.assertEqual(d.content.b, {'x': 'x', 1: 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
-#     def test_subdocument(self):
-#         sub_doc = self._create_repr(
-#             meta={'type': 'T', 'self': 'self', 'a': 'a'},
-#             content={'b': 'b'}
-#         )
+    def test_filters(self):
+        d = self._make_one(
+            meta={
+                'type': 'type',
+                'self': 'self',
+                'filters': {
+                    'filter1': 'f1{placeholder1}{placeholder2}',
+                    'filter2': 'f2',
+                },
+            },
+        )
+
+        f = d.get_filter_uri(d, 'filter1', placeholder1='a', placeholder2='b')
+        self.assertEqual(f, 'f1ab')
+
+        f = d.get_filter_uri(d, 'filter2')
+        self.assertEqual(f, 'f2')
+
+
+# from resty.tests.mocks import MockStateMachine, MockDocument
+
+# class TestLazyDocument(unittest.TestCase):
+
+#     def setUp(self):
+#         self.sm = MockStateMachine()
+#         doc = MockDocument(meta={'b': 'b'}, content={'a': 'a', 'x': 'x'})
+#         self.sm.add_state('test://partial_object', doc)
+
+#     def _get_target(self):
+#         from resty.documents import LazyDocument
+#         return LazyDocument
+
+#     def _make_one(self, meta={}, content={}):
+#         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
+#         meta_copy.update(content)
+#         return self._get_target()(meta_copy, self.sm)
+
+#     def test_no_attrs(self):
 #         d = self._make_one(
-#             meta={'type': 'T', 'self': 'self', 'sd': sub_doc}
+#             meta={'type': 'T', 'self': 'test://partial_object'}
 #         )
-#         sd = d.subdocument('sd')
-#         self.assertEqual(sd.meta.a, 'a')
-#         self.assertEqual(sd.content.b, 'b')
+#         self.assertEqual(d.content.a, 'a')
+#         self.assertEqual(d.meta.b, 'b')
 
-#     def test_subclass_subdocument(self):
+#     def test_existing_attrs(self):
+#         d = self._make_one(
+#             meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
+#             content={'a': 'aa'}
+#         )
+#         self.assertEqual(d.content.a, 'aa')
+#         self.assertEqual(d.meta.b, 'bb')
+#         self.assertEqual(d.content.x, 'x')  # Trigger rerfesh
+#         self.assertEqual(d.content.a, 'a')
+#         self.assertEqual(d.meta.b, 'b')
 
-#         class MD(self._get_target()):
-#             def __init__(self, captured=None):
-#                 self.caputred = captured
-
-#             def _sub_document(self, attr):
-#                 return '%s SD'
-
-#         d = MD()
-#         sd = d.subdocument('test')
-#         self.assertEqual(sd.caputerd, 'test SD')
-
-
-class TestLazyDocument(unittest.TestCase):
-
-    def setUp(self):
-        self.sm = MockStateMachine()
-        doc = MockDocument(meta={'b': 'b'}, content={'a': 'a', 'x': 'x'})
-        self.sm.add_state('test://partial_object', doc)
-
-    def _get_target(self):
-        from resty.documents import LazyDocument
-        return LazyDocument
-
-    def _make_one(self, meta={}, content={}):
-        meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
-        meta_copy.update(content)
-        return self._get_target()(meta_copy, self.sm)
-
-    def test_no_attrs(self):
-        d = self._make_one(meta={'type': 'T', 'self': 'test://partial_object'})
-        self.assertEqual(d.content.a, 'a')
-        self.assertEqual(d.meta.b, 'b')
-
-    def test_existing_attrs(self):
-        d = self._make_one(
-            meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
-            content={'a': 'aa'}
-        )
-        self.assertEqual(d.content.a, 'aa')
-        self.assertEqual(d.meta.b, 'bb')
-        self.assertEqual(d.content.x, 'x')  # Trigger rerfesh
-        self.assertEqual(d.content.a, 'a')
-        self.assertEqual(d.meta.b, 'b')
-
-    def test_attr_error(self):
-        d = self._make_one(
-            meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
-            content={'a': 'aa'}
-        )
-        self.assertRaises(AttributeError, getattr, d.content, 'not_found')
-        self.assertRaises(AttributeError, getattr, d.meta, 'not_found')
-        self.assertRaises(AttributeError, getattr, d.meta, 'a')
-        self.assertRaises(AttributeError, getattr, d.content, 'b')
+#     def test_attr_error(self):
+#         d = self._make_one(
+#             meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
+#             content={'a': 'aa'}
+#         )
+#         self.assertRaises(AttributeError, getattr, d.content, 'not_found')
+#         self.assertRaises(AttributeError, getattr, d.meta, 'not_found')
+#         self.assertRaises(AttributeError, getattr, d.meta, 'a')
+#         self.assertRaises(AttributeError, getattr, d.content, 'b')
