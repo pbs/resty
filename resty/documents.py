@@ -1,3 +1,6 @@
+import copy
+
+
 class Properties(object):
     def __init__(self, data, prefix=''):
         self.data = data
@@ -32,13 +35,25 @@ class DictDocument(object):
         return data
 
     def get_filter_uri(self, name, **kwargs):
-        filter_uri = self._data['$filters'][name]
+        filter_uri = self.meta.filters[name]
         for key, value in kwargs.iteritems():
             filter_uri = filter_uri.replace('{' + key + '}', value)
         return filter_uri
 
-    def get_related_data(self, name):
-        return ''
+    def get_related_data(self, relation, klass=None):
+        related = copy.deepcopy(self.meta.links)
+
+        result = []
+        for item in related:
+            if relation == item.get('$relationship'):
+                item.pop('$relationship')
+                if klass is None or klass == item.get('$class'):
+                    result.append(item)
+
+        if len(result)==1:
+            return result.pop()
+
+        raise ValueError
 
     def get_service_data(self, name):
         return ''
