@@ -35,6 +35,8 @@ class TestDictDocument(unittest.TestCase):
         d = self._make_one(meta={'type': 'type', 'self': 'self'})
         self.assertEqual(d.type, 'type')
         self.assertEqual(d.self, 'self')
+        self.assertRaises(AttributeError, getattr, d.meta, 'type')
+        self.assertRaises(AttributeError, getattr, d.meta, 'self')
 
     def test_meta_attrs(self):
         d = self._make_one(
