@@ -70,30 +70,30 @@ class TestDictDocument(unittest.TestCase):
         self.assertEqual(d.content.b, {'x': 'x', 1: 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
-    def test_subdocument(self):
-        sub_doc = self._create_repr(
-            meta={'type': 'T', 'self': 'self', 'a': 'a'},
-            content={'b': 'b'}
-        )
-        d = self._make_one(
-            meta={'type': 'T', 'self': 'self', 'sd': sub_doc}
-        )
-        sd = d.subdocument('sd')
-        self.assertEqual(sd.meta.a, 'a')
-        self.assertEqual(sd.content.b, 'b')
+#     def test_subdocument(self):
+#         sub_doc = self._create_repr(
+#             meta={'type': 'T', 'self': 'self', 'a': 'a'},
+#             content={'b': 'b'}
+#         )
+#         d = self._make_one(
+#             meta={'type': 'T', 'self': 'self', 'sd': sub_doc}
+#         )
+#         sd = d.subdocument('sd')
+#         self.assertEqual(sd.meta.a, 'a')
+#         self.assertEqual(sd.content.b, 'b')
 
-    def test_subclass_subdocument(self):
+#     def test_subclass_subdocument(self):
 
-        class MD(self._get_target()):
-            def __init__(self, captured=None):
-                self.caputred = captured
+#         class MD(self._get_target()):
+#             def __init__(self, captured=None):
+#                 self.caputred = captured
 
-            def _sub_document(self, attr):
-                return '%s SD'
+#             def _sub_document(self, attr):
+#                 return '%s SD'
 
-        d = MD()
-        sd = d.subdocument('test')
-        self.assertEqual(sd.caputerd, 'test SD')
+#         d = MD()
+#         sd = d.subdocument('test')
+#         self.assertEqual(sd.caputerd, 'test SD')
 
 
 class TestLazyDocument(unittest.TestCase):
