@@ -25,13 +25,17 @@ class DictDocument(object):
     def _validated(self, data):
         if not data:
             raise ValueError
-
         required = ['$type', '$self']
         for r in required:
             if r not in data:
                 raise ValueError
-
         return data
+
+    def get_filter_uri(self, name, **kwargs):
+        filter_uri = self._data['$filters'][name]
+        for key, value in kwargs.iteritems():
+            filter_uri = filter_uri.replace('{' + key + '}', value)
+        return filter_uri
 
     def get_related_data(self, name):
         return ''
