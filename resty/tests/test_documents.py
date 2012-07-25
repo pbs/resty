@@ -98,11 +98,30 @@ class TestDictDocument(unittest.TestCase):
 
         data = d.get_related_data(d, 'r1')
         self.assertEqual(data, {'a': 'a', '$b': 'b'})
-        self.assertRaises(ValueError, d.get_related_data, d, 'r2')
+
+        self.assertRaises(ValueError, d.get_related_data, 'r2')
         data = d.get_related_data(d, 'r2', 'C1')
         self.assertEqual(data, {'c': 1})
         data = d.get_related_data(d, 'r2', 'C2')
         self.assertEqual(data, {'c': 2})
+
+    def test_services(self):
+        d = self._make_one(
+            meta={
+                'type': 'type',
+                'self': 'self',
+                'services': {
+                    'a': {'a': 1},
+                    'b': {'b': 2},
+                }
+            },
+        )
+
+        data = d.get_service_data('a')
+        self.assertEqual(data, {'a': 1})
+        data = d.get_service_data('b')
+        self.assertEqual(data, {'b': 2})
+        self.assertRaises(ValueError, d.get_service_data, 'c')
 
 
 # from resty.tests.mocks import MockStateMachine, MockDocument
