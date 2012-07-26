@@ -32,6 +32,11 @@ class Resource(object):
 class Collection(object):
     def __init__(self, doc):
         self.doc = doc
+        self.self = doc.self
+
+    def filter(self, name, **kwargs):
+        filtered = self.doc.filter(name, kwargs)
+        return filtered.specialize()
 
 
 class Service(object):
