@@ -9,7 +9,7 @@ class TestClient(unittest.TestCase):
         from resty import Client
         return Client
 
-    def _make_one(self, doc):
+    def _make_one(self):
         loader = MockHttpLoader()
         loader.register('test://load_document/1/', 'type1', 'text1')
         loader.register('test://load_document/2/', 'type2', 'text2')
