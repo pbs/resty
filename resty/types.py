@@ -1,3 +1,6 @@
+import math
+
+
 class Resource(object):
     def __init__(self, doc):
         self.doc = doc
@@ -34,10 +37,6 @@ class Collection(object):
         self.doc = doc
         self.self = doc.self
 
-    def filter(self, name, **kwargs):
-        filtered = self.doc.filter(name, **kwargs)
-        return filtered.specialize()
-
     @property
     def hash(self):
         return self.doc.meta.hash
@@ -45,6 +44,25 @@ class Collection(object):
     @property
     def elements(self):
         return self.doc.meta.elements
+
+    def filter(self, name, **kwargs):
+        filtered = self.doc.filter(name, **kwargs)
+        return filtered.specialize()
+
+    def items(self):
+        try:
+            self.doc.meta.page
+        except AttributeError:
+            for item in self.doc.items():
+                yield item.specialize()
+        else:
+            total_nr_pages = math.ceil(
+                float(self.doc.meta.items_count) / float(self.doc.meta.page_size)
+            )
+            for page_nr in range(1, int(total_nr_pages) + 1):
+                page = self.doc.page(page_nr)
+                for item in page.items():
+                    yield item.specialize()
 
 
 class Service(object):

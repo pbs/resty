@@ -157,9 +157,9 @@ class TestCollection(unittest.TestCase):
         page3 = MockDocument(meta={'elements': 'ET'})
         page3.add_item(MockDocument(meta={'type': 'T5'}))
 
-        page1.page_size = page2.page_size = page3.page_size = 2
-        page1.items_count = page2.items_count = page3.items_count = 5
-        page1.page, page2.page, page3.page = 1, 2, 3
+        page1.meta.page_size = page2.meta.page_size = page3.meta.page_size = 2
+        page1.meta.items_count = page2.meta.items_count = page3.meta.items_count = 5
+        page1.meta.page, page2.meta.page, page3.meta.page = 1, 2, 3
 
         page1.add_page(1, page1)
         page1.add_page(2, page2)
