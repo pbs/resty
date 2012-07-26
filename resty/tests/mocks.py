@@ -25,6 +25,9 @@ class MockDocument(object):
     def related(self, name):
         return self._related[name]
 
+    def specialize(self):
+        return 'specialized %s' % self.type
+
 
 class MockStateMachine(object):
 
