@@ -40,7 +40,7 @@ class TestResource(unittest.TestCase):
         self.assertEqual(r.content.b, 'b')
 
     def test_attr_error(self):
-        r = self._make_one(MockDocument())
+        r = self._make_one(MockDocument(meta={'class': 'C'}))
         self.assertRaises(AttributeError, getattr, r.content, 'not_found')
         self.assertRaises(AttributeError, getattr, r, 'edited')
 
