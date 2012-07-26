@@ -45,7 +45,9 @@ class TestResource(unittest.TestCase):
         self.assertRaises(AttributeError, getattr, r, 'edited')
 
     def test_get_related(self):
-        doc = MockDocument(meta={'type': 'T', 'self': 'test://document/'})
+        doc = MockDocument(
+            meta={'type': 'T', 'self': 'test://document/', 'class': 'C'}
+        )
         doc.add_related(
             'relationship1',
             MockDocument(meta={'type': 'R1', 'self': 'test://related'})
