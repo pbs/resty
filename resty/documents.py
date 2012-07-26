@@ -42,7 +42,7 @@ class DictDocument(object):
             filter_uri = filter_uri.replace('{' + key + '}', value)
         return self._sm.load_document(filter_uri)
 
-    def get_related_data(self, relation, klass=None):
+    def related(self, relation, klass=None):
         related = copy.deepcopy(self.meta.links)
 
         result = []
@@ -53,7 +53,7 @@ class DictDocument(object):
                     result.append(item)
 
         if len(result)==1:
-            return result.pop()
+            return DictDocument(self._sm, result.pop())
 
         raise ValueError
 
