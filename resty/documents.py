@@ -70,9 +70,9 @@ class JsonDocument(object):
             raise ValueError
         return JsonDocument(self._sm, json.dumps(data))
 
-    def get_items(self):
+    def items(self):
         for item in self.meta.items:
-            yield item
+            yield JsonDocument(self._sm, json.dumps(item))
 
 
 class Resource(JsonDocument):
