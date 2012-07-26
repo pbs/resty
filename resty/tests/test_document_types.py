@@ -135,3 +135,50 @@ class TestCollection(unittest.TestCase):
         self.assertEqual(r.filter('zipcode'), 'specialized ZIP')
         self.assertEqual(r.filter('IP'), 'specialized IP')
         self.assertRaises(ValueError, r.filter, 'err')
+
+    def test_iter_simple(self):
+        doc = MockDocument(meta={'elements': 'ET'})
+        doc.add_item(MockDocument(meta={'type': 'T1'}))
+        doc.add_item(MockDocument(meta={'type': 'T2'}))
+        r = self._make_one(doc)
+        items = list(r.items())
+        self.assertEqual(items, ['specialized T1', 'specialized T2'])
+
+    def test_iter_multi_page(self):
+
+        page1 = MockDocument(meta={'elements': 'ET'})
+        page1.add_item(MockDocument(meta={'type': 'T1'}))
+        page1.add_item(MockDocument(meta={'type': 'T2'}))
+
+        page2 = MockDocument(meta={'elements': 'ET'})
+        page2.add_item(MockDocument(meta={'type': 'T3'}))
+        page2.add_item(MockDocument(meta={'type': 'T4'}))
+
+        page3 = MockDocument(meta={'elements': 'ET'})
+        page3.add_item(MockDocument(meta={'type': 'T5'}))
+
+        page1.page_size = page2.page_size = page3.page_size = 2
+        page1.items_count = page2.items_count = page3.items_count = 5
+        page1.page, page2.page, page3.page = 1, 2, 3
+
+        page1.add_page(1, page1)
+        page1.add_page(2, page2)
+        page1.add_page(3, page3)
+
+        page2.add_page(1, page1)
+        page2.add_page(2, page2)
+        page2.add_page(3, page3)
+
+        page3.add_page(1, page1)
+        page3.add_page(2, page2)
+        page3.add_page(3, page3)
+
+        r = self._make_one(page1)
+        items = list(r.items())
+        self.assertEqual(items, [
+            'specialized T1',
+            'specialized T2',
+            'specialized T3',
+            'specialized T4',
+            'specialized T5',
+        ])

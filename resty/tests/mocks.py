@@ -20,6 +20,8 @@ class MockDocument(object):
         self._related = {}
         self._services = {}
         self._filters = {}
+        self._pages = {}
+        self._items = []
 
     def add_related(self, name, doc):
         self._related[name] = doc
@@ -30,6 +32,12 @@ class MockDocument(object):
     def add_filter(self, name, doc):
         self._filters[name] = doc
 
+    def add_item(self, doc):
+        self._items.append(doc)
+
+    def add_page(self, page_nr, doc):
+        self._pages[page_nr] = doc
+
     def related(self, name, _):
         return self._related[name]
 
@@ -37,13 +45,19 @@ class MockDocument(object):
         return self._services[name]
 
     def filter(self, name, **kwargs):
-        return self._filters[name]
+        try:
+            return self._filters[name]
+        except KeyError:
+            raise ValueError
 
     def specialize(self):
         return 'specialized %s' % self.type
 
     def items(self):
-        pass
+        return self._items
+
+    def page(self, nr):
+        return self._pages[nr]
 
 
 class MockStateMachine(object):
