@@ -77,6 +77,11 @@ class JsonDocument(object):
     def specialize(self):
         return self._sm.specialize(self)
 
+    def page(self, page):
+        page_uri = self.meta.page_control.replace('{page}', str(page))
+        return self._sm.load_document(page_uri)
+
+
 class Resource(JsonDocument):
     def __init__(self, data):
         super(Resource, self).__init__(data)
