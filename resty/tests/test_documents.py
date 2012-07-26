@@ -77,6 +77,12 @@ class TestDictDocument(unittest.TestCase):
         self.assertEqual(d.content.b, {'x': 'x', 1: 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
+    def test_class_meta(self):
+        d = self._make_one(
+            meta={'type': 'type', 'self': 'self', 'class': 'C'},
+        )
+        self.assertEqual(d.meta.class_, 'C')
+
     def test_filters(self):
         d = self._make_one(
             meta={
