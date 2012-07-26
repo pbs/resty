@@ -166,6 +166,8 @@ class TestJsonDocument(unittest.TestCase):
 
         serv_doc = d.service('service1')
         self.assertEqual(serv_doc.content.s, 1)
+        # fix this test
+        # self.assertEqual(serv_doc.content.ss, 11) # not in summary
         serv_doc = d.service('service2')
         self.assertEqual(serv_doc.content.s, 2)
         self.assertRaises(ValueError, d.service, 'service3')

@@ -63,7 +63,7 @@ class JsonDocument(object):
                     result.append(item)
 
         if len(result) == 1:
-            return JsonDocument(self._sm, json.dumps(result.pop()))
+            return self._sm.load_document(result.pop()['$self'])
 
         raise ValueError
 
@@ -71,11 +71,11 @@ class JsonDocument(object):
         data = self.meta.services.get(name)
         if not data:
             raise ValueError
-        return JsonDocument(self._sm, json.dumps(data))
+        return self._sm.load_data(data['$self'])
 
     def items(self):
         for item in self.meta.items:
-            yield JsonDocument(self._sm, json.dumps(item))
+            yield self._sm.load_data(item['$self'])
 
     def specialize(self):
         return self._sm.specialize(self)
