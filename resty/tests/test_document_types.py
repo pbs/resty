@@ -30,7 +30,12 @@ class TestResource(unittest.TestCase):
         self.assertEqual(r.edited, 'edited')
 
     def test_content(self):
-        r = self._make_one(MockDocument(content={'a': 'a', 'b': 'b'}))
+        r = self._make_one(
+            MockDocument(
+                meta={'class': 'C'},
+                content={'a': 'a', 'b': 'b'}
+            )
+        )
         self.assertEqual(r.content.a, 'a')
         self.assertEqual(r.content.b, 'b')
 
