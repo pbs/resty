@@ -1,16 +1,31 @@
-from resty.documents import JsonDocument
+class Resource(object):
+    def __init__(self, doc):
+        self.doc = doc
+        self.self = doc.self
+        self.class_ = doc.meta.class_
+
+    @property
+    def edited(self):
+        return self.doc.meta.edited
+
+    @property
+    def created(self):
+        return self.doc.meta.created
+
+    @property
+    def hash(self):
+        return self.doc.meta.hash
+
+    @property
+    def id(self):
+        return self.doc.meta.id
 
 
-class Resource(JsonDocument):
-    def __init__(self, data):
-        super(Resource, self).__init__(data)
+class Collection(object):
+    def __init__(self, doc):
+        self.doc = doc
 
 
-class Collection(JsonDocument):
-    def __init__(self, data):
-        super(Collection, self).__init__(data)
-
-
-class Service(JsonDocument):
-    def __init__(self, data):
-        super(Service, self).__init__(data)
+class Service(object):
+    def __init__(self, doc):
+        self.doc = doc
