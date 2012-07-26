@@ -71,11 +71,11 @@ class JsonDocument(object):
         data = self.meta.services.get(name)
         if not data:
             raise ValueError
-        return self._sm.load_data(data['$self'])
+        return self._sm.load_document(data['$self'])
 
     def items(self):
         for item in self.meta.items:
-            yield self._sm.load_data(item['$self'])
+            yield self._sm.load_document(item['$self'])
 
     def specialize(self):
         return self._sm.specialize(self)
