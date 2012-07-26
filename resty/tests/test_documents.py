@@ -17,7 +17,7 @@ class TestDictDocument(unittest.TestCase):
         return DictDocument
 
     def _make_one(self, meta={}, content={}):
-        return self._get_target()(self._doc_repr(meta, content))
+        return self._get_target()(self.mock_sm, self._doc_repr(meta, content))
 
     def _doc_repr(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
