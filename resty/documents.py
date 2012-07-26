@@ -59,7 +59,7 @@ class JsonDocument(object):
         for item in related:
             if relation == item.get('$relationship'):
                 item.pop('$relationship')
-                if class_ is None or class_ == item.get('$class'):
+                if class_ in [None, item.get('$class'), item.get('$elements')]:
                     result.append(item)
 
         if len(result) == 1:
