@@ -16,8 +16,8 @@ class MockStateMachine(object):
     def __init__(self):
         self._data = {}
 
-    def transition_to(self, next_state):
-        return self._data[next_state]
+    def load_document(self, URI):
+        return self._data[URI]
 
-    def add_state(self, state_id, state_content):
-        self._data[state_id] = state_content
+    def add_document(self, state_id, document):
+        self._data[state_id] = document

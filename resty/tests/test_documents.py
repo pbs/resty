@@ -1,7 +1,16 @@
 import unittest2 as unittest
 
 
+from resty.tests.mocks import MockStateMachine
+
+
 class TestDictDocument(unittest.TestCase):
+
+    def setUp(self):
+        self.mock_sm = MockStateMachine()
+        self.sentinel = object()
+        self.mock_sm.add_document('test://a/b/', self.sentinel)
+        self.mock_sm.add_document('test://test/', self.sentinel)
 
     def _get_target(self):
         from resty.documents import DictDocument
@@ -10,7 +19,7 @@ class TestDictDocument(unittest.TestCase):
     def _make_one(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
         meta_copy.update(content)
-        return self._get_target()(meta_copy)
+        return self._get_target()(self.mock_sm, meta_copy)
 
     def test_empty_json(self):
         self.assertRaises(ValueError, self._make_one)
@@ -71,17 +80,17 @@ class TestDictDocument(unittest.TestCase):
                 'type': 'type',
                 'self': 'self',
                 'filters': {
-                    'filter1': 'f1{placeholder1}{placeholder2}',
-                    'filter2': 'f2',
+                    'filter1': 'test://{placeholder1}/{placeholder2}/',
+                    'filter2': 'test://test/',
                 },
             },
         )
 
-        f = d.get_filter_uri('filter1', placeholder1='a', placeholder2='b')
-        self.assertEqual(f, 'f1ab')
+        f = d.filter('filter1', placeholder1='a', placeholder2='b')
+        self.assertEqual(f, self.sentinel)
 
         f = d.get_filter_uri('filter2')
-        self.assertEqual(f, 'f2')
+        self.assertEqual(f, self.sentinel)
 
     def test_links(self):
         d = self._make_one(
