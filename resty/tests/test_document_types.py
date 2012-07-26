@@ -46,11 +46,11 @@ class TestResource(unittest.TestCase):
 
     def test_get_related(self):
         doc = MockDocument(meta={'type': 'T', 'self': 'test://document/'})
-        doc.add_document(
+        doc.add_related(
             'relationship1',
             MockDocument(meta={'type': 'R1', 'self': 'test://related'})
         )
-        doc.add_document(
+        doc.add_related(
             'relationship2',
             MockDocument(meta={'type': 'R2', 'self': 'test://related'})
         )
