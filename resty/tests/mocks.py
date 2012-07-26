@@ -18,12 +18,19 @@ class MockDocument(object):
         self.content.__dict__.update(content)
 
         self._related = {}
+        self._services = {}
 
     def add_related(self, name, doc):
         self._related[name] = doc
 
+    def add_service(self, name, doc):
+        self._services[name] = doc
+
     def related(self, name):
         return self._related[name]
+
+    def service(self, name):
+        return self._services[name]
 
     def specialize(self):
         return 'specialized %s' % self.type
