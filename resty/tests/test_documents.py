@@ -17,9 +17,12 @@ class TestDictDocument(unittest.TestCase):
         return DictDocument
 
     def _make_one(self, meta={}, content={}):
+        return self._get_target()(self._doc_repr(meta, content))
+
+    def _doc_repr(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
         meta_copy.update(content)
-        return self._get_target()(self.mock_sm, meta_copy)
+        return meta_copy
 
     def test_empty_json(self):
         self.assertRaises(ValueError, self._make_one)
@@ -98,21 +101,42 @@ class TestDictDocument(unittest.TestCase):
                 'type': 'type',
                 'self': 'self',
                 'links': [
-                    {'$relationship': 'r1', 'a': 'a', '$b': 'b'},
-                    {'$relationship': 'r2', 'c': 1, '$class': 'C1'},
-                    {'$relationship': 'r2', 'c': 2, '$class': 'C2'},
+                    self._doc_repr(
+                        meta={
+                            'type': 'T', 'self': 'self',
+                            'relationship': 'r1', 'b': 'b',
+                        },
+                        content={'a': 'a'}
+                    ),
+                    self._doc_repr(
+                        meta={
+                            'type': 'T', 'self': 'self',
+                            'relationship': 'r2', 'class': 'C1',
+                        },
+                        content={'c': 1}
+                    ),
+                    self._doc_repr(
+                        meta={
+                            'type': 'T', 'self': 'self',
+                            'relationship': 'r2', 'class': 'C2',
+                        },
+                        content={'c': 2}
+                    ),
                 ],
             },
         )
 
-        data = d.get_related_data('r1')
-        self.assertEqual(data, {'a': 'a', '$b': 'b'})
+        rel_doc = d.related('r1')
+        self.assertEqual(rel_doc.content.a, 'a')
+        self.assertEqual(rel_doc.meta.b, 'b')
 
-        self.assertRaises(ValueError, d.get_related_data, 'r2')
-        data = d.get_related_data('r2', 'C1')
-        self.assertEqual(data, {'c': 1, '$class': 'C1'})
-        data = d.get_related_data('r2', 'C2')
-        self.assertEqual(data, {'c': 2, '$class': 'C2'})
+        self.assertRaises(ValueError, d.related, 'r2')
+        rel_doc = d.related('r2', 'C1')
+        self.assertEqual(rel_doc.content.c, 1)
+        self.assertEqual(rel_doc.meta.class_, 'C1')
+        rel_doc = d.related('r2', 'C2')
+        self.assertEqual(rel_doc.content.c, 2)
+        self.assertEqual(rel_doc.meta.class_, 'C2')
 
     def test_services(self):
         d = self._make_one(
