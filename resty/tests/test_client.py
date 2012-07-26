@@ -1,5 +1,7 @@
 import unittest2 as unittest
 
+from resty.tests.mocks import MockHttpLoader
+
 
 class TestClient(unittest.TestCase):
 
@@ -9,8 +11,8 @@ class TestClient(unittest.TestCase):
 
     def _make_one(self, doc):
         loader = MockHttpLoader()
-        loader.regiser('test://load_document/1/', 'type1', 'text1')
-        loader.regiser('test://load_document/2/', 'type2', 'text2')
+        loader.register('test://load_document/1/', 'type1', 'text1')
+        loader.register('test://load_document/2/', 'type2', 'text2')
         return self._get_target()(loader.load)
 
     def test_load_document(self):
