@@ -11,8 +11,13 @@ class Properties(object):
         try:
             return object.__getattribute__(self, name)
         except AttributeError:
-            if self.prefix+name in self.data:
-                object.__setattr__(self, name, self.data[self.prefix+name])
+            if name == 'class_':
+                prefixed = self.prefix + name[:-1]
+            else:
+                prefixed = self.prefix + name
+
+            if prefixed in self.data:
+                object.__setattr__(self, name, self.data[prefixed])
             return object.__getattribute__(self, name)
 
 
@@ -54,7 +59,7 @@ class JsonDocument(object):
                 if klass is None or klass == item.get('$class'):
                     result.append(item)
 
-        if len(result)==1:
+        if len(result) == 1:
             return JsonDocument(self._sm, json.dumps(result.pop()))
 
         raise ValueError
