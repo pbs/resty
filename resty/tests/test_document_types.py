@@ -101,4 +101,3 @@ class TestService(unittest.TestCase):
         r = self._make_one(doc)
         self.assertEqual(r.service('s1'), 'specialized R1')
         self.assertEqual(r.service('s2'), 'specialized R2')
->>>>>>> 796b015fbb2b3c7abe47b84add0acd433cbc23ae
