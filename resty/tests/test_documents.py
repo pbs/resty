@@ -173,11 +173,23 @@ class TestJsonDocument(unittest.TestCase):
             meta={
                 'type': 'type',
                 'self': 'self',
-                'items': [1, 2, 3],
+                'items': [
+                    self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'i': 0}
+                    ),
+                    self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'i': 1}
+                    ),
+                    self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'i': 2}
+                    ),
+                ],
             },
         )
 
-        self.assertEqual(set(d.get_items()), set([1, 2, 3]))
+        item_docs = d.items()
+        for pos, item_doc in enumerate(item_docs):
+            self.assertEqual(item_doc.content.i, pos)
 
 # from resty.tests.mocks import MockStateMachine, MockDocument
 
