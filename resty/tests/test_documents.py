@@ -152,17 +152,21 @@ class TestJsonDocument(unittest.TestCase):
                 'type': 'type',
                 'self': 'self',
                 'services': {
-                    'a': {'a': 1},
-                    'b': {'b': 2},
+                    'service1': self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'s': 1}
+                    ),
+                    'service2': self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'s': 2}
+                    ),
                 }
             },
         )
 
-        data = d.get_service_data('a')
-        self.assertEqual(data, {'a': 1})
-        data = d.get_service_data('b')
-        self.assertEqual(data, {'b': 2})
-        self.assertRaises(ValueError, d.get_service_data, 'c')
+        serv_doc = d.service('service1')
+        self.assertEqual(serv_doc.content.s, 1)
+        serv_doc = d.service('service2')
+        self.assertEqual(serv_doc.content.s, 2)
+        self.assertRaises(ValueError, d.service, 'service3')
 
     def test_items(self):
         d = self._make_one(
