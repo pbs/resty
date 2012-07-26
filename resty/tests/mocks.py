@@ -4,7 +4,7 @@ class Attrs(object):
 
 class MockDocument(object):
 
-    def __init__(self, meta={}, content={}, specialized=None):
+    def __init__(self, meta={}, content={}):
 
         self.type = meta.pop('type', 'T')
         self.self = meta.pop('self', 'test://mock_document')
@@ -17,25 +17,25 @@ class MockDocument(object):
         self.meta.__dict__.update(meta)
         self.content.__dict__.update(content)
 
-        self._specialized = specialized
+        self._related = {}
 
-    def specialize(self):
-        return (
-            self._specialized
-            or 'specialized %s' % self.self
-        )
+    def add_related(self, name, doc):
+        self._related[name] = doc
+
+    def related(self, name):
+        return self._related[name]
 
 
 class MockStateMachine(object):
 
     def __init__(self):
-        self._data = {}
+        self._documents = {}
 
     def load_document(self, URI):
-        return self._data[URI]
+        return self._documents[URI]
 
     def add_document(self, state_id, document):
-        self._data[state_id] = document
+        self._documents[state_id] = document
 
     def specialize(self, doc):
         return 'specialized %s' % doc.type

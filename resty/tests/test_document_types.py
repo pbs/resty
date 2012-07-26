@@ -38,3 +38,17 @@ class TestResource(unittest.TestCase):
         r = self._make_one(MockDocument())
         self.assertRaises(AttributeError, getattr, r.content, 'not_found')
         self.assertRaises(AttributeError, getattr, r, 'edited')
+
+    def test_get_related(self):
+        doc = MockDocument(meta={'type': 'T', 'self': 'test://document/'})
+        doc.add_document(
+            'relationship1',
+            MockDocument(meta={'type': 'R1', 'self': 'test://related'})
+        )
+        doc.add_document(
+            'relationship2',
+            MockDocument(meta={'type': 'R2', 'self': 'test://related'})
+        )
+        r = self._make_one(doc)
+        self.assertEqual(r.related('relationship1'), 'specialized R1')
+        self.assertEqual(r.related('relationship1'), 'specialized R2')
