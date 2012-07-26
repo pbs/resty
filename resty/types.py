@@ -38,6 +38,14 @@ class Collection(object):
         filtered = self.doc.filter(name, kwargs)
         return filtered.specialize()
 
+    @property
+    def hash(self):
+        return self.doc.meta.hash
+
+    @property
+    def elements(self):
+        return self.doc.meta.elements
+
 
 class Service(object):
     def __init__(self, doc):
