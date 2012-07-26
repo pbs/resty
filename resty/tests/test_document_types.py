@@ -1,26 +1,22 @@
 import unittest2 as unittest
 
-from resty.tests.mocks import MockStateMachine, MockDocument
+from resty.tests.mocks import MockDocument
 
 
 class TestResource(unittest.TestCase):
-
-    def setUp(self):
-        self.sm = MockStateMachine()
-        self.sm.add_state(1, '')
 
     def _get_target(self):
         from resty.types import Resource
         return Resource
 
     def _make_one(self, doc):
-        return self._get_target()(doc, self.sm)
+        return self._get_target()(doc)
 
     def test_known_meta(self):
         r = self._make_one(
             MockDocument(meta={
                 'hash': 'hash',
-                'klass': 'Class',
+                'class': 'Class',
                 'id': 'ID',
                 'created': 'created',
                 'edited': 'edited',
