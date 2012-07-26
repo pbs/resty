@@ -80,18 +80,3 @@ class JsonDocument(object):
     def page(self, page):
         page_uri = self.meta.page_control.replace('{page}', str(page))
         return self._sm.load_document(page_uri)
-
-
-class Resource(JsonDocument):
-    def __init__(self, data):
-        super(Resource, self).__init__(data)
-
-
-class Collection(JsonDocument):
-    def __init__(self, data):
-        super(Collection, self).__init__(data)
-
-
-class Service(JsonDocument):
-    def __init__(self, data):
-        super(Service, self).__init__(data)
