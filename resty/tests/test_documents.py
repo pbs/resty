@@ -1,10 +1,11 @@
 import unittest2 as unittest
+import json
 
 
 from resty.tests.mocks import MockStateMachine
 
 
-class TestDictDocument(unittest.TestCase):
+class TestJsonDocument(unittest.TestCase):
 
     def setUp(self):
         self.mock_sm = MockStateMachine()
@@ -13,11 +14,12 @@ class TestDictDocument(unittest.TestCase):
         self.mock_sm.add_document('test://test/', self.sentinel)
 
     def _get_target(self):
-        from resty.documents import DictDocument
-        return DictDocument
+        from resty.documents import JsonDocument
+        return JsonDocument
 
     def _make_one(self, meta={}, content={}):
-        return self._get_target()(self.mock_sm, self._doc_repr(meta, content))
+        data = json.dumps(self._doc_repr(meta, content))
+        return self._get_target()(self.mock_sm, data)
 
     def _doc_repr(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
