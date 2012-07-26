@@ -1,4 +1,5 @@
 import copy
+import json
 
 
 class Properties(object):
@@ -15,8 +16,9 @@ class Properties(object):
             return object.__getattribute__(self, name)
 
 
-class DictDocument(object):
+class JsonDocument(object):
     def __init__(self, state_machine, data):
+        data = json.loads(data)
         self._sm = state_machine
         self._data = self._validated(data)
 
@@ -53,7 +55,7 @@ class DictDocument(object):
                     result.append(item)
 
         if len(result)==1:
-            return DictDocument(self._sm, result.pop())
+            return JsonDocument(self._sm, json.dumps(result.pop()))
 
         raise ValueError
 
@@ -68,16 +70,16 @@ class DictDocument(object):
             yield item
 
 
-class Resource(DictDocument):
+class Resource(JsonDocument):
     def __init__(self, data):
         super(Resource, self).__init__(data)
 
 
-class Collection(DictDocument):
+class Collection(JsonDocument):
     def __init__(self, data):
         super(Collection, self).__init__(data)
 
 
-class Service(DictDocument):
+class Service(JsonDocument):
     def __init__(self, data):
         super(Service, self).__init__(data)
