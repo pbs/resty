@@ -1,10 +1,11 @@
 import unittest2 as unittest
+import json
 
 
 from resty.tests.mocks import MockStateMachine
 
 
-class TestDictDocument(unittest.TestCase):
+class TestJsonDocument(unittest.TestCase):
 
     def setUp(self):
         self.mock_sm = MockStateMachine()
@@ -13,11 +14,12 @@ class TestDictDocument(unittest.TestCase):
         self.mock_sm.add_document('test://test/', self.sentinel)
 
     def _get_target(self):
-        from resty.documents import DictDocument
-        return DictDocument
+        from resty.documents import JsonDocument
+        return JsonDocument
 
     def _make_one(self, meta={}, content={}):
-        return self._get_target()(self.mock_sm, self._doc_repr(meta, content))
+        data = json.dumps(self._doc_repr(meta, content))
+        return self._get_target()(self.mock_sm, data)
 
     def _doc_repr(self, meta={}, content={}):
         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
@@ -71,10 +73,10 @@ class TestDictDocument(unittest.TestCase):
     def test_complex_structure(self):
         d = self._make_one(
             meta={'type': 'type', 'self': 'self'},
-            content={'a': [1, 'a'], 'b': {'x': 'x', 1: 1}}
+            content={'a': [1, 'a'], 'b': {'x': 'x', 'y': 1}}
         )
         self.assertEqual(d.content.a, [1, 'a'])
-        self.assertEqual(d.content.b, {'x': 'x', 1: 1})
+        self.assertEqual(d.content.b, {'x': 'x', 'y': 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
     def test_class_meta(self):
@@ -150,17 +152,21 @@ class TestDictDocument(unittest.TestCase):
                 'type': 'type',
                 'self': 'self',
                 'services': {
-                    'a': {'a': 1},
-                    'b': {'b': 2},
+                    'service1': self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'s': 1}
+                    ),
+                    'service2': self._doc_repr(
+                        meta={'type': 'T', 'self': 'self'}, content={'s': 2}
+                    ),
                 }
             },
         )
 
-        data = d.get_service_data('a')
-        self.assertEqual(data, {'a': 1})
-        data = d.get_service_data('b')
-        self.assertEqual(data, {'b': 2})
-        self.assertRaises(ValueError, d.get_service_data, 'c')
+        serv_doc = d.service('service1')
+        self.assertEqual(serv_doc.content.s, 1)
+        serv_doc = d.service('service2')
+        self.assertEqual(serv_doc.content.s, 2)
+        self.assertRaises(ValueError, d.service, 'service3')
 
     def test_items(self):
         d = self._make_one(
