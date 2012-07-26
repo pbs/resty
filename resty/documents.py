@@ -44,6 +44,9 @@ class JsonDocument(object):
         return data
 
     def filter(self, name, **kwargs):
+        if name not in self.meta.filters:
+            raise ValueError
+
         filter_uri = self.meta.filters[name]
         for key, value in kwargs.iteritems():
             filter_uri = filter_uri.replace('{' + key + '}', value)

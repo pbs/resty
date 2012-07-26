@@ -35,7 +35,7 @@ class Collection(object):
         self.self = doc.self
 
     def filter(self, name, **kwargs):
-        filtered = self.doc.filter(name, kwargs)
+        filtered = self.doc.filter(name, **kwargs)
         return filtered.specialize()
 
 
