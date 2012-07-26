@@ -37,3 +37,16 @@ class Collection(object):
 class Service(object):
     def __init__(self, doc):
         self.doc = doc
+        self.self = doc.self
+
+    @property
+    def hash(self):
+        return self.doc.meta.hash
+
+    @property
+    def content(self):
+        return self.doc.content
+
+    def service(self, name):
+        service = self.doc.service(name)
+        return service.specialize()
