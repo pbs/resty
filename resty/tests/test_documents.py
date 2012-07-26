@@ -73,10 +73,10 @@ class TestJsonDocument(unittest.TestCase):
     def test_complex_structure(self):
         d = self._make_one(
             meta={'type': 'type', 'self': 'self'},
-            content={'a': [1, 'a'], 'b': {'x': 'x', 1: 1}}
+            content={'a': [1, 'a'], 'b': {'x': 'x', 'y': 1}}
         )
         self.assertEqual(d.content.a, [1, 'a'])
-        self.assertEqual(d.content.b, {'x': 'x', 1: 1})
+        self.assertEqual(d.content.b, {'x': 'x', 'y': 1})
         self.assertRaises(AttributeError, getattr, d.content.b, 'x')
 
     def test_class_meta(self):
