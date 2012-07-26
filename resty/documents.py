@@ -74,6 +74,8 @@ class JsonDocument(object):
         for item in self.meta.items:
             yield JsonDocument(self._sm, json.dumps(item))
 
+    def specialize(self):
+        return self._sm.specialize(self)
 
 class Resource(JsonDocument):
     def __init__(self, data):
