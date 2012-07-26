@@ -15,6 +15,7 @@ class TestResource(unittest.TestCase):
     def test_known_meta(self):
         r = self._make_one(
             MockDocument(meta={
+                'self': 'S',
                 'hash': 'hash',
                 'class': 'Class',
                 'id': 'ID',
@@ -23,6 +24,7 @@ class TestResource(unittest.TestCase):
             })
         )
 
+        self.assertEqual(r.self, 'S')
         self.assertEqual(r.hash, 'hash')
         self.assertEqual(r.class_, 'Class')
         self.assertEqual(r.id, 'ID')
