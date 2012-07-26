@@ -22,7 +22,7 @@ class MockDocument(object):
     def add_related(self, name, doc):
         self._related[name] = doc
 
-    def related(self, name):
+    def related(self, name, _):
         return self._related[name]
 
     def specialize(self):

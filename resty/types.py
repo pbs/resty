@@ -20,6 +20,14 @@ class Resource(object):
     def id(self):
         return self.doc.meta.id
 
+    @property
+    def content(self):
+        return self.doc.content
+
+    def related(self, relation, class_=None):
+        rel = self.doc.related(relation, class_)
+        return rel.specialize()
+
 
 class Collection(object):
     def __init__(self, doc):

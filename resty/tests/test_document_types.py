@@ -60,4 +60,4 @@ class TestResource(unittest.TestCase):
         )
         r = self._make_one(doc)
         self.assertEqual(r.related('relationship1'), 'specialized R1')
-        self.assertEqual(r.related('relationship1'), 'specialized R2')
+        self.assertEqual(r.related('relationship2'), 'specialized R2')

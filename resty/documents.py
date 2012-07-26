@@ -49,14 +49,14 @@ class JsonDocument(object):
             filter_uri = filter_uri.replace('{' + key + '}', value)
         return self._sm.load_document(filter_uri)
 
-    def related(self, relation, klass=None):
+    def related(self, relation, class_=None):
         related = copy.deepcopy(self.meta.links)
 
         result = []
         for item in related:
             if relation == item.get('$relationship'):
                 item.pop('$relationship')
-                if klass is None or klass == item.get('$class'):
+                if class_ is None or class_ == item.get('$class'):
                     result.append(item)
 
         if len(result) == 1:
