@@ -21,3 +21,6 @@ class MockStateMachine(object):
 
     def add_document(self, state_id, document):
         self._data[state_id] = document
+
+    def specialize(self, doc):
+        return 'specialized %s' % doc.type

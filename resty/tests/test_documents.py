@@ -191,6 +191,10 @@ class TestJsonDocument(unittest.TestCase):
         for pos, item_doc in enumerate(item_docs):
             self.assertEqual(item_doc.content.i, pos)
 
+    def test_specialize(self):
+        d = self._make_one(meta={'type': 'T', 'self': 'self'})
+        self.assertEqual(d.specialize(), 'specialized T')
+
 # from resty.tests.mocks import MockStateMachine, MockDocument
 
 # class TestLazyDocument(unittest.TestCase):
