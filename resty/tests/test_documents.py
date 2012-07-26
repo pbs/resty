@@ -12,6 +12,8 @@ class TestJsonDocument(unittest.TestCase):
         self.sentinel = object()
         self.mock_sm.add_document('test://a/b/', self.sentinel)
         self.mock_sm.add_document('test://test/', self.sentinel)
+        self.mock_sm.add_document('test://test/1/', self.sentinel)
+        self.mock_sm.add_document('test://test/2/', self.sentinel)
 
     def _get_target(self):
         from resty.documents import JsonDocument
@@ -190,6 +192,18 @@ class TestJsonDocument(unittest.TestCase):
         item_docs = d.items()
         for pos, item_doc in enumerate(item_docs):
             self.assertEqual(item_doc.content.i, pos)
+
+    def test_page(self):
+        d = self._make_one(
+            meta={
+                'type': 'type',
+                'self': 'self',
+                'page_control': 'test://test/{page}/',
+            },
+        )
+
+        self.assertEqual(d.page(1), self.sentinel)
+        self.assertEqual(d.page(2), self.sentinel)
 
     def test_specialize(self):
         d = self._make_one(meta={'type': 'T', 'self': 'self'})
