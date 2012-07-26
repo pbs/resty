@@ -200,7 +200,7 @@ class TestJsonDocument(unittest.TestCase):
             meta={
                 'type': 'type',
                 'self': 'self',
-                'page_control': 'test://test/{page}/',
+                'page_control': 'test://test/{page_num}/',
             },
         )
 

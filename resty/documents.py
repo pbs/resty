@@ -81,5 +81,5 @@ class JsonDocument(object):
         return self._sm.specialize(self)
 
     def page(self, page):
-        page_uri = self.meta.page_control.replace('{page}', str(page))
+        page_uri = self.meta.page_control.replace('{page_num}', str(page))
         return self._sm.load_document(page_uri)
