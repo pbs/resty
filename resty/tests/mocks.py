@@ -19,6 +19,7 @@ class MockDocument(object):
 
         self._related = {}
         self._services = {}
+        self._filters = {}
 
     def add_related(self, name, doc):
         self._related[name] = doc
@@ -26,14 +27,23 @@ class MockDocument(object):
     def add_service(self, name, doc):
         self._services[name] = doc
 
+    def add_filter(self, name, doc):
+        self._filters[name] = doc
+
     def related(self, name, _):
         return self._related[name]
 
     def service(self, name):
         return self._services[name]
 
+    def filter(self, name, **kwargs):
+        return self._filters[name]
+
     def specialize(self):
         return 'specialized %s' % self.type
+
+    def items(self):
+        pass
 
 
 class MockStateMachine(object):

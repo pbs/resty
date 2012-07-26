@@ -101,3 +101,37 @@ class TestService(unittest.TestCase):
         r = self._make_one(doc)
         self.assertEqual(r.service('s1'), 'specialized R1')
         self.assertEqual(r.service('s2'), 'specialized R2')
+
+
+class TestCollection(unittest.TestCase):
+
+    def _get_target(self):
+        from resty.types import Collection
+        return Collection
+
+    def _make_one(self, doc):
+        return self._get_target()(doc)
+
+    def test_known_meta(self):
+        r = self._make_one(MockDocument(meta={
+            'self': 'S',
+            'elements': 'ET',
+            'hash': 'hash',
+        }))
+
+        self.assertEqual(r.self, 'S')
+        self.assertEqual(r.elements, 'ET')
+        self.assertEqual(r.hash, 'hash')
+
+    def test_attr_error(self):
+        r = self._make_one(MockDocument(meta={'elements': 'ET'}))
+        self.assertRaises(AttributeError, getattr, r, 'hash')
+
+    def test_filter(self):
+        doc = MockDocument(meta={'elements': 'ET'})
+        doc.add_filter('zipcode', MockDocument(meta={'type': 'ZIP'}))
+        doc.add_filter('IP', MockDocument(meta={'type': 'IP'}))
+        r = self._make_one(doc)
+        self.assertEqual(r.filter('zipcode'), 'specialized ZIP')
+        self.assertEqual(r.filter('IP'), 'specialized IP')
+        self.assertRaises(ValueError, r.filter, 'err')
