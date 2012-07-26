@@ -89,7 +89,7 @@ class TestDictDocument(unittest.TestCase):
         f = d.filter('filter1', placeholder1='a', placeholder2='b')
         self.assertEqual(f, self.sentinel)
 
-        f = d.get_filter_uri('filter2')
+        f = d.filter('filter2')
         self.assertEqual(f, self.sentinel)
 
     def test_links(self):

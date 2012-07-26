@@ -16,7 +16,8 @@ class Properties(object):
 
 
 class DictDocument(object):
-    def __init__(self, data):
+    def __init__(self, state_machine, data):
+        self._sm = state_machine
         self._data = self._validated(data)
 
         self.type = self._data.pop('$type')
@@ -35,11 +36,11 @@ class DictDocument(object):
                 raise ValueError
         return data
 
-    def get_filter_uri(self, name, **kwargs):
+    def filter(self, name, **kwargs):
         filter_uri = self.meta.filters[name]
         for key, value in kwargs.iteritems():
             filter_uri = filter_uri.replace('{' + key + '}', value)
-        return filter_uri
+        return self._sm.load_document(filter_uri)
 
     def get_related_data(self, relation, klass=None):
         related = copy.deepcopy(self.meta.links)
