@@ -64,15 +64,15 @@ class JsonDocument(object):
 
         raise ValueError
 
-    def get_service_data(self, name):
+    def service(self, name):
         data = self.meta.services.get(name)
         if not data:
             raise ValueError
-        return data
+        return JsonDocument(self._sm, json.dumps(data))
 
-    def get_items(self):
+    def items(self):
         for item in self.meta.items:
-            yield item
+            yield JsonDocument(self._sm, json.dumps(item))
 
 
 class Resource(JsonDocument):
