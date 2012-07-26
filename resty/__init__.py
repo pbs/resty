@@ -18,7 +18,7 @@ class Client(object):
         self.register[type_] = class_
 
     def specialize(self, class_):
-        return self.register[class_.type_](class_)
+        return self.register[class_.type](class_)
 
     def load(self, uri):
         d = self.load_document(uri)
