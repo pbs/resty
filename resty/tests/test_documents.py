@@ -349,3 +349,38 @@ class TestLazyDocument(unittest.TestCase):
         d = self._make_one(self.d)
 
         self.assertEqual(d.filter('F'), sentinel)
+
+    def test_fast_related(self):
+        sentinel = object()
+        self.d.add_related('R', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.related('R'), sentinel)
+
+    def test_fast_service(self):
+        sentinel = object()
+        self.d.add_service('S', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.service('S'), sentinel)
+
+    def test_fast_items(self):
+        sentinel = object()
+        self.d.add_item(sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.items(), [sentinel])
+
+    def test_fast_page(self):
+        sentinel = object()
+        self.d.add_page(1, sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.page(1), sentinel)
+
+    def test_fast_filter(self):
+        sentinel = object()
+        self.registered_d.add_filter('F', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.filter('F'), sentinel)
