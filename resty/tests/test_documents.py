@@ -264,6 +264,14 @@ class TestLazyDocument(unittest.TestCase):
         )
         self.mock_sm.add_document(mock_d.self, mock_d)
 
+        self.d = MockDocument(
+            meta={
+                'type': 'T', 'self': 'test://mock_resource/',
+                'a': 'aa',
+            },
+            content={'b': 'bb'}
+        )
+
     def _get_target(self):
         from resty.documents import LazyDocument
         return LazyDocument
@@ -272,29 +280,26 @@ class TestLazyDocument(unittest.TestCase):
         return self._get_target()(self.mock_sm, doc)
 
     def test_fast_accesss(self):
-        d = MockDocument(
-            meta={
-                'type': 'T', 'self': 'test://mock_resource/',
-                'a': 'aa',
-            },
-            content={'b': 'bb'}
-        )
-
-        ld = self._make_one(d)
+        ld = self._make_one(self.d)
 
         self.assertEqual(ld.meta.a, 'aa')
         self.assertEqual(ld.content.b, 'bb')
 
     def test_slow_accesss(self):
-        d = MockDocument(
-            meta={
-                'type': 'T', 'self': 'test://mock_resource/',
-                'a': 'aa',
-            },
-            content={'b': 'bb'}
-        )
-
-        ld = self._make_one(d)
+        ld = self._make_one(self.d)
 
         self.assertEqual(ld.meta.x, 'x')
         self.assertEqual(ld.content.y, 'y')
+
+    def test_reload(self):
+        ld = self._make_one(self.d)
+
+        ld.meta.x  # Trigger data reload
+        self.assertEqual(ld.meta.a, 'a')
+        self.assertEqual(ld.content.b, 'b')
+
+    def test_attr_error(self):
+        ld = self._make_one(self.d)
+
+        self.assertRaises(AttributeError, getattr, ld.meta, 'not_existing')
+        self.assertRaises(AttributeError, getattr, ld.content, 'not_existing')
