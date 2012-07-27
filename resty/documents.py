@@ -108,13 +108,34 @@ class LazyDocument(object):
             return self.method_name(*args, **kwargs)
 
     def filter(self, name, **kwargs):
-        return self._load_method('filter', name, **kwargs)
+        if self.loaded:
+            return self.loaded_doc.filter(name, **kwargs)
+        try:
+            return self.original_doc.filter(name, **kwargs)
+        except DocumentError:
+            self.loaded = True
+            self.loaded_doc = self._sm.load_document(self.original_doc.self)
+            return self.filter(name, **kwargs)
 
     def related(self, relation, class_=None):
-        return self._load_method('related', relation, class_)
+        if self.loaded:
+            return self.loaded_doc.related(relation, class_)
+        try:
+            return self.original_doc.related(relation, class_)
+        except DocumentError:
+            self.loaded = True
+            self.loaded_doc = self._sm.load_document(self.original_doc.self)
+            return self.related(relation, class_)
 
     def service(self, name):
-        return self._load_method('service', name)
+        if self.loaded:
+            return self.loaded_doc.service(name)
+        try:
+            return self.original_doc.service(name)
+        except DocumentError:
+            self.loaded = True
+            self.loaded_doc = self._sm.load_document(self.original_doc.self)
+            return self.service(name)
 
     def items(self):
         return self._load_method('items')
