@@ -315,9 +315,37 @@ class TestLazyDocument(unittest.TestCase):
         self.assertRaises(AttributeError, getattr, ld.meta, 'not_existing')
         self.assertRaises(AttributeError, getattr, ld.content, 'not_existing')
 
-    def test_related(self):
+    def test_deferred_related(self):
         sentinel = object()
         self.registered_d.add_related('R', sentinel)
         d = self._make_one(self.d)
 
         self.assertEqual(d.related('R'), sentinel)
+
+    def test_deferred_service(self):
+        sentinel = object()
+        self.registered_d.add_service('S', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.service('S'), sentinel)
+
+    def test_deferred_items(self):
+        sentinel = object()
+        self.registered_d.add_item(sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.items(), [sentinel])
+
+    def test_deferred_page(self):
+        sentinel = object()
+        self.registered_d.add_page(1, sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.page(1), sentinel)
+
+    def test_deferred_filter(self):
+        sentinel = object()
+        self.registered_d.add_filter('F', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.filter('F'), sentinel)
