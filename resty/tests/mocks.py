@@ -52,7 +52,7 @@ class MockDocument(object):
     def add_page(self, page_nr, doc):
         self._pages[page_nr] = doc
 
-    def related(self, name, _):
+    def related(self, name, class_=None):
         if not self._related:
             raise DocumentError
         try:
