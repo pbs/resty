@@ -59,7 +59,7 @@ class JsonDocument(object):
         for item in related:
             if relation == item.get('$relationship'):
                 item.pop('$relationship')
-                if class_ is None or class_ == item.get('$class'):
+                if class_ in [None, item.get('$class'), item.get('$elements')]:
                     result.append(item)
 
         if len(result) == 1:
@@ -83,3 +83,37 @@ class JsonDocument(object):
     def page(self, page):
         page_uri = self.meta.page_control.replace('{page_num}', str(page))
         return self._sm.load_document(page_uri)
+
+
+class LazyDocument(object):
+    def __init__(self, state_machine, doc):
+        self._sm = state_machine
+        self.original_doc = doc
+        self.loaded_doc = None
+        self.loaded = False
+
+    def filter(self, name, **kwargs):
+        if self.loaded:
+            return self.loaded_doc.filter(name, **kwargs)
+
+        try:
+            return self.original_doc.filter(name, **kwargs)
+        except AttributeError:
+            self.loaded = True
+            self.loaded_doc = self._sm.load_document(self.original_doc.self)
+            return self.filter(name, **kwargs)
+
+    def related(self, relation, class_=None):
+        pass
+
+    def service(self, name):
+        pass
+
+    def items(self):
+        pass
+
+    def specialize(self):
+        pass
+
+    def page(self, page):
+        pass
