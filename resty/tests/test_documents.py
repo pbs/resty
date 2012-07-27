@@ -247,6 +247,14 @@ class TestJsonDocument(unittest.TestCase):
         d = self._make_one(meta={'type': 'T', 'self': 'self'})
         self.assertEqual(d.specialize(), 'specialized T')
 
+    def test_error(self):
+        d = self._make_one(meta={'type': 'T', 'self': 'self'})
+
+        from resty.documents import DocumentError
+
+        self.assertRaises(DocumentError, d.related, 'R')
+        self.assertRaises(DocumentError, d.service, 'S')
+
 
 class TestLazyDocument(unittest.TestCase):
 
