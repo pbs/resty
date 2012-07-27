@@ -139,52 +139,30 @@ class LazyDocument(object):
     def content(self):
         return self.original_doc.content
 
-    def _load_method(self, method_name, *args, **kwargs):
-        method_name = getattr(self, method_name)
-        if self.loaded:
-            return self.loaded_doc.method_name(*args, **kwargs)
-        try:
-            return self.original_doc.method_name(*args, **kwargs)
-        except AttributeError:
-            self.loaded = True
-            self.loaded_doc = self._sm.load_document(self.original_doc.self)
-            return self.method_name(*args, **kwargs)
-
     def filter(self, name, **kwargs):
-        if self.loaded:
-            return self.loaded_doc.filter(name, **kwargs)
-        try:
-            return self.original_doc.filter(name, **kwargs)
-        except DocumentError:
-            self.loaded = True
-            self.loaded_doc = self._sm.load_document(self.original_doc.self)
-            return self.filter(name, **kwargs)
+        return self._defer_method('filter', name, **kwargs)
 
     def related(self, relation, class_=None):
-        if self.loaded:
-            return self.loaded_doc.related(relation, class_)
-        try:
-            return self.original_doc.related(relation, class_)
-        except DocumentError:
-            self.loaded = True
-            self.loaded_doc = self._sm.load_document(self.original_doc.self)
-            return self.related(relation, class_)
+        return self._defer_method('related', relation, class_=class_)
 
     def service(self, name):
+        return self._defer_method('service', name)
+
+    def items(self):
+        return self._defer_method('items')
+
+    def specialize(self):
+        return self._sm.specialize(self)
+
+    def page(self, page):
+        return self._defer_method('page', page)
+
+    def _defer_method(self, method_name, *args, **kwargs):
         if self.loaded:
-            return self.loaded_doc.service(name)
+            return getattr(self.loaded_doc, method_name)(*args, **kwargs)
         try:
-            return self.original_doc.service(name)
+            return getattr(self.original_doc, method_name)(*args, **kwargs)
         except DocumentError:
             self.loaded = True
             self.loaded_doc = self._sm.load_document(self.original_doc.self)
-            return self.service(name)
-
-    def items(self):
-        return self._load_method('items')
-
-    def specialize(self):
-        return self._load_method('specialize')
-
-    def page(self, page):
-        return self._load_method('page', page)
+            return self._defer_method(method_name, *args, **kwargs)
