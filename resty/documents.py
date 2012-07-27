@@ -92,28 +92,31 @@ class LazyDocument(object):
         self.loaded_doc = None
         self.loaded = False
 
-    def filter(self, name, **kwargs):
+    def _load_method(self, method_name, *args, **kwargs):
+        method_name = getattr(self, method_name)
         if self.loaded:
-            return self.loaded_doc.filter(name, **kwargs)
-
+            return self.loaded_doc.method_name(*args, **kwargs)
         try:
-            return self.original_doc.filter(name, **kwargs)
+            return self.original_doc.method_name(*args, **kwargs)
         except AttributeError:
             self.loaded = True
             self.loaded_doc = self._sm.load_document(self.original_doc.self)
-            return self.filter(name, **kwargs)
+            return self.method_name(*args, **kwargs)
+
+    def filter(self, name, **kwargs):
+        return self._load_method('filter', name, **kwargs)
 
     def related(self, relation, class_=None):
-        pass
+        return self._load_method('related', relation, class_)
 
     def service(self, name):
-        pass
+        return self._load_method('service', name)
 
     def items(self):
-        pass
+        return self._load_method('items')
 
     def specialize(self):
-        pass
+        return self._load_method('specialize')
 
     def page(self, page):
-        pass
+        return self._load_method('page', page)
