@@ -89,25 +89,6 @@ class JsonDocument(object):
         return self._sm.load_document(page_uri)
 
 
-class LazyProperties(object):
-    def __init__(self, data, prefix=''):
-        self.data = data
-        self.prefix = prefix
-
-    def __getattribute__(self, name):
-        try:
-            return object.__getattribute__(self, name)
-        except AttributeError:
-            if name == 'class_':
-                prefixed = self.prefix + name[:-1]
-            else:
-                prefixed = self.prefix + name
-
-            if prefixed in self.data:
-                object.__setattr__(self, name, self.data[prefixed])
-            return object.__getattribute__(self, name)
-
-
 class LazyDocument(object):
     def __init__(self, state_machine, doc):
         self._sm = state_machine
@@ -119,25 +100,8 @@ class LazyDocument(object):
         self.type = doc.type
         self.self = doc.self
 
-    #def __getattribute__(self, name):
-        #try:
-            #return object.__getattribute__(self, name)
-        #except AttributeError:
-            #if self.loaded is False:
-                #self.loaded = True
-                #self.loaded_doc = self._sm.load_document(self.self)
-                #object.__setattr__(self, 'meta', self.loaded_doc.meta)
-                #object.__setattr__(self, 'content', self.loaded_doc.content)
-
-            #return object.__getattribute__(self, name)
-
-    @property
-    def meta(self):
-        return self.original_doc.meta
-
-    @property
-    def content(self):
-        return self.original_doc.content
+        self.meta = doc.meta
+        self.content = doc.content
 
     def _load_method(self, method_name, *args, **kwargs):
         method_name = getattr(self, method_name)
