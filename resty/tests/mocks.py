@@ -1,3 +1,6 @@
+from resty.documents import DocumentError
+
+
 class MockHttpLoader(object):
 
     def __init__(self):
@@ -50,12 +53,24 @@ class MockDocument(object):
         self._pages[page_nr] = doc
 
     def related(self, name, _):
-        return self._related[name]
+        if not self._related:
+            raise DocumentError
+        try:
+            return self._related[name]
+        except KeyError:
+            raise ValueError
 
     def service(self, name):
-        return self._services[name]
+        if not self._services:
+            raise DocumentError
+        try:
+            return self._services[name]
+        except KeyError:
+            raise ValueError
 
     def filter(self, name, **kwargs):
+        if not self._filters:
+            raise DocumentError
         try:
             return self._filters[name]
         except KeyError:
@@ -65,10 +80,20 @@ class MockDocument(object):
         return 'specialized %s' % self.type
 
     def items(self):
-        return self._items
+        if not self._items:
+            raise DocumentError
+        try:
+            return self._items
+        except KeyError:
+            raise ValueError
 
     def page(self, nr):
-        return self._pages[nr]
+        if not self._pages:
+            raise DocumentError
+        try:
+            return self._pages[nr]
+        except KeyError:
+            raise ValueError
 
 
 class MockStateMachine(object):
