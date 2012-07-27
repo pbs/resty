@@ -2,13 +2,47 @@ import unittest2 as unittest
 import json
 
 
-from resty.tests.mocks import MockStateMachine
+from resty.tests.mocks import MockStateMachine, MockDocument
 
 
 class TestJsonDocument(unittest.TestCase):
 
     def setUp(self):
         self.mock_sm = MockStateMachine()
+
+        mock_d = MockDocument(
+            meta={
+                'type': 'T',
+                'self': 'test://mock_resource/1/',
+                'class': 'C1',
+                'a': 'a', 'x': 'x',
+            },
+            content={'b': 'b', 'y': 'y'},
+        )
+        self.mock_sm.add_document(mock_d.self, mock_d)
+
+        mock_d = MockDocument(
+            meta={
+                'type': 'T',
+                'self': 'test://mock_resource/2/',
+                'class': 'C2',
+                'a': 'a', 'x': 'x',
+            },
+            content={'b': 'b', 'y': 'y'},
+        )
+        self.mock_sm.add_document(mock_d.self, mock_d)
+
+        mock_d = MockDocument(
+            meta={
+                'type': 'T',
+                'self': 'test://mock_resource/3/',
+                'class': 'C3',
+                'a': 'a', 'x': 'x',
+            },
+            content={'b': 'b', 'y': 'y'},
+        )
+        self.mock_sm.add_document(mock_d.self, mock_d)
+
         self.sentinel = object()
         self.mock_sm.add_document('test://a/b/', self.sentinel)
         self.mock_sm.add_document('test://test/', self.sentinel)
@@ -108,45 +142,44 @@ class TestJsonDocument(unittest.TestCase):
     def test_links(self):
         d = self._make_one(
             meta={
-                'type': 'type',
-                'self': 'self',
+                'type': 'type', 'self': 'self',
                 'links': [
                     self._doc_repr(
                         meta={
-                            'type': 'T', 'self': 'self',
-                            'relationship': 'r1', 'b': 'b',
+                            'type': 'T', 'self': 'test://mock_resource/1/',
+                            'relationship': 'R1', 'class': 'C1',
+                            'a': 'a',
                         },
-                        content={'a': 'a'}
+                        content={'b': 'b'}
                     ),
                     self._doc_repr(
                         meta={
-                            'type': 'T', 'self': 'self',
-                            'relationship': 'r2', 'class': 'C1',
-                        },
-                        content={'c': 1}
+                            'type': 'T', 'self': 'test://mock_resource/2/',
+                            'relationship': 'R2', 'class': 'C2',
+                        }
                     ),
                     self._doc_repr(
                         meta={
-                            'type': 'T', 'self': 'self',
-                            'relationship': 'r2', 'class': 'C2',
-                        },
-                        content={'c': 2}
+                            'type': 'T', 'self': 'test://mock_resource/3/',
+                            'relationship': 'R2', 'class': 'C3',
+                        }
                     ),
                 ],
             },
         )
 
-        rel_doc = d.related('r1')
-        self.assertEqual(rel_doc.content.a, 'a')
-        self.assertEqual(rel_doc.meta.b, 'b')
-
-        self.assertRaises(ValueError, d.related, 'r2')
-        rel_doc = d.related('r2', 'C1')
-        self.assertEqual(rel_doc.content.c, 1)
+        rel_doc = d.related('R1')
         self.assertEqual(rel_doc.meta.class_, 'C1')
-        rel_doc = d.related('r2', 'C2')
-        self.assertEqual(rel_doc.content.c, 2)
+        self.assertEqual(rel_doc.meta.a, 'a')
+        self.assertEqual(rel_doc.meta.x, 'x')
+        self.assertEqual(rel_doc.content.b, 'b')
+        self.assertEqual(rel_doc.content.y, 'y')
+
+        self.assertRaises(ValueError, d.related, 'R2')
+        rel_doc = d.related('R2', 'C2')
         self.assertEqual(rel_doc.meta.class_, 'C2')
+        rel_doc = d.related('R2', 'C3')
+        self.assertEqual(rel_doc.meta.class_, 'C3')
 
     def test_services(self):
         d = self._make_one(
@@ -155,21 +188,23 @@ class TestJsonDocument(unittest.TestCase):
                 'self': 'self',
                 'services': {
                     'service1': self._doc_repr(
-                        meta={'type': 'T', 'self': 'self'}, content={'s': 1}
+                        meta={'type': 'T', 'self': 'test://mock_resource/1/'}
                     ),
                     'service2': self._doc_repr(
-                        meta={'type': 'T', 'self': 'self'}, content={'s': 2}
+                        meta={'type': 'T', 'self': 'test://mock_resource/2/'}
                     ),
                 }
             },
         )
 
         serv_doc = d.service('service1')
-        self.assertEqual(serv_doc.content.s, 1)
-        # fix this test
-        # self.assertEqual(serv_doc.content.ss, 11) # not in summary
+        self.assertEqual(serv_doc.meta.a, 'a')
+        self.assertEqual(serv_doc.content.b, 'b')
+        self.assertEqual(serv_doc.meta.class_, 'C1')
         serv_doc = d.service('service2')
-        self.assertEqual(serv_doc.content.s, 2)
+        self.assertEqual(serv_doc.meta.a, 'a')
+        self.assertEqual(serv_doc.content.b, 'b')
+        self.assertEqual(serv_doc.meta.class_, 'C2')
         self.assertRaises(ValueError, d.service, 'service3')
 
     def test_items(self):
@@ -179,21 +214,22 @@ class TestJsonDocument(unittest.TestCase):
                 'self': 'self',
                 'items': [
                     self._doc_repr(
-                        meta={'type': 'T', 'self': 'self'}, content={'i': 0}
+                        meta={'type': 'T', 'self': 'test://mock_resource/1/'}
                     ),
                     self._doc_repr(
-                        meta={'type': 'T', 'self': 'self'}, content={'i': 1}
+                        meta={'type': 'T', 'self': 'test://mock_resource/2/'}
                     ),
                     self._doc_repr(
-                        meta={'type': 'T', 'self': 'self'}, content={'i': 2}
+                        meta={'type': 'T', 'self': 'test://mock_resource/3/'}
                     ),
                 ],
             },
         )
 
-        item_docs = d.items()
-        for pos, item_doc in enumerate(item_docs):
-            self.assertEqual(item_doc.content.i, pos)
+        item_docs = list(d.items())
+        self.assertEqual(item_docs[0].meta.class_, 'C1')
+        self.assertEqual(item_docs[1].meta.class_, 'C2')
+        self.assertEqual(item_docs[2].meta.class_, 'C3')
 
     def test_page(self):
         d = self._make_one(
