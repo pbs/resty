@@ -2,6 +2,10 @@ import copy
 import json
 
 
+class DocumentError(RuntimeError):
+    pass
+
+
 class Properties(object):
     def __init__(self, data, prefix=''):
         self.data = data

@@ -247,13 +247,24 @@ class TestJsonDocument(unittest.TestCase):
         d = self._make_one(meta={'type': 'T', 'self': 'self'})
         self.assertEqual(d.specialize(), 'specialized T')
 
+    def test_error(self):
+        d = self._make_one(meta={'type': 'T', 'self': 'self'})
+
+        from resty.documents import DocumentError
+
+        self.assertRaises(DocumentError, d.related, 'R')
+        self.assertRaises(DocumentError, d.service, 'S')
+        self.assertRaises(DocumentError, d.items)
+        self.assertRaises(DocumentError, d.page, 1)
+        self.assertRaises(DocumentError, d.filter, 'F')
+
 
 class TestLazyDocument(unittest.TestCase):
 
     def setUp(self):
         self.mock_sm = MockStateMachine()
 
-        mock_d = MockDocument(
+        self.registered_d = MockDocument(
             meta={
                 'type': 'T',
                 'self': 'test://mock_resource/',
@@ -262,7 +273,7 @@ class TestLazyDocument(unittest.TestCase):
             },
             content={'b': 'b', 'y': 'y'},
         )
-        self.mock_sm.add_document(mock_d.self, mock_d)
+        self.mock_sm.add_document(self.registered_d.self, self.registered_d)
 
         self.d = MockDocument(
             meta={
@@ -303,3 +314,10 @@ class TestLazyDocument(unittest.TestCase):
 
         self.assertRaises(AttributeError, getattr, ld.meta, 'not_existing')
         self.assertRaises(AttributeError, getattr, ld.content, 'not_existing')
+
+    def test_related(self):
+        sentinel = object()
+        self.registered_d.add_related('R', sentinel)
+        d = self._make_one(self.d)
+
+        self.assertEqual(d.related('R'), sentinel)
