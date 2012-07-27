@@ -247,48 +247,54 @@ class TestJsonDocument(unittest.TestCase):
         d = self._make_one(meta={'type': 'T', 'self': 'self'})
         self.assertEqual(d.specialize(), 'specialized T')
 
-# from resty.tests.mocks import MockStateMachine, MockDocument
 
-# class TestLazyDocument(unittest.TestCase):
+class TestLazyDocument(unittest.TestCase):
 
-#     def setUp(self):
-#         self.sm = MockStateMachine()
-#         doc = MockDocument(meta={'b': 'b'}, content={'a': 'a', 'x': 'x'})
-#         self.sm.add_state('test://partial_object', doc)
+    def setUp(self):
+        self.mock_sm = MockStateMachine()
 
-#     def _get_target(self):
-#         from resty.documents import LazyDocument
-#         return LazyDocument
+        mock_d = MockDocument(
+            meta={
+                'type': 'T',
+                'self': 'test://mock_resource/',
+                'class': 'C1',
+                'a': 'a', 'x': 'x',
+            },
+            content={'b': 'b', 'y': 'y'},
+        )
+        self.mock_sm.add_document(mock_d.self, mock_d)
 
-#     def _make_one(self, meta={}, content={}):
-#         meta_copy = dict(('$%s' % key, value) for key, value in meta.items())
-#         meta_copy.update(content)
-#         return self._get_target()(meta_copy, self.sm)
+    def _get_target(self):
+        from resty.documents import LazyDocument
+        return LazyDocument
 
-#     def test_no_attrs(self):
-#         d = self._make_one(
-#             meta={'type': 'T', 'self': 'test://partial_object'}
-#         )
-#         self.assertEqual(d.content.a, 'a')
-#         self.assertEqual(d.meta.b, 'b')
+    def _make_one(self, doc):
+        return self._get_target()(self.mock_sm, doc)
 
-#     def test_existing_attrs(self):
-#         d = self._make_one(
-#             meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
-#             content={'a': 'aa'}
-#         )
-#         self.assertEqual(d.content.a, 'aa')
-#         self.assertEqual(d.meta.b, 'bb')
-#         self.assertEqual(d.content.x, 'x')  # Trigger rerfesh
-#         self.assertEqual(d.content.a, 'a')
-#         self.assertEqual(d.meta.b, 'b')
+    def test_fast_accesss(self):
+        d = MockDocument(
+            meta={
+                'type': 'T', 'self': 'test://mock_resource/',
+                'a': 'aa',
+            },
+            content={'b': 'bb'}
+        )
 
-#     def test_attr_error(self):
-#         d = self._make_one(
-#             meta={'type': 'T', 'self': 'test://partial_object', 'b': 'bb'},
-#             content={'a': 'aa'}
-#         )
-#         self.assertRaises(AttributeError, getattr, d.content, 'not_found')
-#         self.assertRaises(AttributeError, getattr, d.meta, 'not_found')
-#         self.assertRaises(AttributeError, getattr, d.meta, 'a')
-#         self.assertRaises(AttributeError, getattr, d.content, 'b')
+        ld = self._make_one(d)
+
+        self.assertEqual(ld.meta.a, 'aa')
+        self.assertEqual(ld.content.b, 'bb')
+
+    def test_slow_accesss(self):
+        d = MockDocument(
+            meta={
+                'type': 'T', 'self': 'test://mock_resource/',
+                'a': 'aa',
+            },
+            content={'b': 'bb'}
+        )
+
+        ld = self._make_one(d)
+
+        self.assertEqual(ld.meta.x, 'x')
+        self.assertEqual(ld.content.y, 'y')
