@@ -254,6 +254,9 @@ class TestJsonDocument(unittest.TestCase):
 
         self.assertRaises(DocumentError, d.related, 'R')
         self.assertRaises(DocumentError, d.service, 'S')
+        self.assertRaises(DocumentError, d.items)
+        self.assertRaises(DocumentError, d.page, 1)
+        self.assertRaises(DocumentError, d.filter, 'F')
 
 
 class TestLazyDocument(unittest.TestCase):
