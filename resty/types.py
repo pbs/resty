@@ -50,19 +50,20 @@ class Collection(object):
         return filtered.specialize()
 
     def items(self):
-        try:
-            self.doc.meta.page
-        except AttributeError:
+        result = []
+        if not hasattr(self.doc.meta, 'page'):
             for item in self.doc.items():
-                yield item.specialize()
+                result.append(item.specialize())
         else:
             total_nr_pages = math.ceil(
-                float(self.doc.meta.items_count) / float(self.doc.meta.page_size)
+                float(self.doc.meta.items_count)
+                / float(self.doc.meta.page_size)
             )
             for page_nr in range(1, int(total_nr_pages) + 1):
                 page = self.doc.page(page_nr)
                 for item in page.items():
-                    yield item.specialize()
+                    result.append(item.specialize())
+        return result
 
 
 class Service(object):

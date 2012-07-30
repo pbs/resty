@@ -178,4 +178,8 @@ class LazyDocument(object):
 
 class LazyJsonDocument(JsonDocument):
     def _from_subdoc(self, subdoc):
-        return LazyDocument(LazyJsonDocument(json.dumps(subdoc)))
+        return LazyDocument(
+            self._sm, LazyJsonDocument(
+                self._sm, json.dumps(subdoc)
+            )
+        )
