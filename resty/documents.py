@@ -48,6 +48,8 @@ class JsonDocument(object):
         return data
 
     def filter(self, name, **kwargs):
+        if not hasattr(self.meta, 'filters'):
+            raise DocumentError('No filters field.')
         if name not in self.meta.filters:
             raise ValueError
 
@@ -57,6 +59,8 @@ class JsonDocument(object):
         return self._sm.load_document(filter_uri)
 
     def related(self, relation, class_=None):
+        if not hasattr(self.meta, 'links'):
+            raise DocumentError('No links field.')
         related = copy.deepcopy(self.meta.links)
 
         result = []
@@ -72,19 +76,27 @@ class JsonDocument(object):
         raise ValueError
 
     def service(self, name):
+        if not hasattr(self.meta, 'services'):
+            raise DocumentError('No services field.')
         data = self.meta.services.get(name)
         if not data:
             raise ValueError
         return self._sm.load_document(data['$self'])
 
     def items(self):
+        if not hasattr(self.meta, 'items'):
+            raise DocumentError('No items field.')
+        result = []
         for item in self.meta.items:
-            yield self._sm.load_document(item['$self'])
+            result.append(self._sm.load_document(item['$self']))
+        return result
 
     def specialize(self):
         return self._sm.specialize(self)
 
     def page(self, page):
+        if not hasattr(self.meta, 'page_control'):
+            raise DocumentError('No page_control field.')
         page_uri = self.meta.page_control.replace('{page_num}', str(page))
         return self._sm.load_document(page_uri)
 

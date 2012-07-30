@@ -3,6 +3,7 @@ import json
 
 
 from resty.tests.mocks import MockStateMachine, MockDocument
+from resty.documents import DocumentError
 
 
 class TestJsonDocument(unittest.TestCase):
@@ -249,8 +250,6 @@ class TestJsonDocument(unittest.TestCase):
 
     def test_error(self):
         d = self._make_one(meta={'type': 'T', 'self': 'self'})
-
-        from resty.documents import DocumentError
 
         self.assertRaises(DocumentError, d.related, 'R')
         self.assertRaises(DocumentError, d.service, 'S')
