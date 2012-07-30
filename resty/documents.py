@@ -71,7 +71,7 @@ class JsonDocument(object):
                     result.append(item)
 
         if len(result) == 1:
-            return self._sm.load_document(result.pop()['$self'])
+            return self._from_subdoc(result.pop())
 
         raise ValueError
 
@@ -81,14 +81,14 @@ class JsonDocument(object):
         data = self.meta.services.get(name)
         if not data:
             raise ValueError
-        return self._sm.load_document(data['$self'])
+        return self._from_subdoc(data)
 
     def items(self):
         if not hasattr(self.meta, 'items'):
             raise DocumentError('No items field.')
         result = []
         for item in self.meta.items:
-            result.append(self._sm.load_document(item['$self']))
+            result.append(self._from_subdoc(item))
         return result
 
     def specialize(self):
@@ -99,6 +99,9 @@ class JsonDocument(object):
             raise DocumentError('No page_control field.')
         page_uri = self.meta.page_control.replace('{page_num}', str(page))
         return self._sm.load_document(page_uri)
+
+    def _from_subdoc(self, subdoc):
+        return self._sm.load_document(subdoc['$self'])
 
 
 class LazyProperties(object):
@@ -171,3 +174,8 @@ class LazyDocument(object):
             self._loaded = True
             self._loaded_doc = self._sm.load_document(self._original_doc.self)
             return self._defer_method(method_name, *args, **kwargs)
+
+
+class LazyJsonDocument(JsonDocument):
+    def _from_subdoc(self, subdoc):
+        return LazyDocument(LazyJsonDocument(json.dumps(subdoc)))

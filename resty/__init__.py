@@ -1,4 +1,7 @@
 import requests
+from resty.documents import JsonDocument, LazyJsonDocument
+from resty.types import Service, Collection, Resource
+
 
 class Client(object):
     def __init__(self, loader):
@@ -30,13 +33,16 @@ def http_loader(uri):
     return response.headers.get('content-type'), response.text
 
 
-from resty.documents import JsonDocument
-from resty.types import Service, Collection, Resource
+dumb_client = Client(http_loader)
+dumb_client.register_document_parser('application/json', JsonDocument)
+dumb_client.register_document('application/vnd.pbs-service+json', Service)
+dumb_client.register_document(
+    'application/vnd.pbs-collection+json', Collection
+)
+dumb_client.register_document('application/vnd.pbs-resource+json', Resource)
 
 client = Client(http_loader)
-
-client.register_document_parser('application/json', JsonDocument)
-
+client.register_document_parser('application/json', LazyJsonDocument)
 client.register_document('application/vnd.pbs-service+json', Service)
 client.register_document('application/vnd.pbs-collection+json', Collection)
 client.register_document('application/vnd.pbs-resource+json', Resource)
