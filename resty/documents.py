@@ -102,49 +102,47 @@ class JsonDocument(object):
 
 
 class LazyProperties(object):
-    def __init__(self, data, parent, prefix=''):
-        self.data = data
-        self.prefix = prefix
-        self.parent = parent
+    def __init__(self, loader):
+        self._arg_loader = loader
 
-    def __getattribute__(self, name):
-        try:
-            return object.__getattribute__(self, name)
-        except AttributeError:
-            if not self.parent.loaded:
-                self.parent.loaded = True
-                loaded_doc = self.parent._sm.load_document(self.parent.self)
-
-                self.parent.loaded_doc = loaded_doc
-                self.parent.meta = loaded_doc.meta
-                self.parent.content = loaded_doc.content
-
-            if self.parent.loaded:
-                if name == 'class_':
-                    prefixed = self.prefix + name[:-1]
-                else:
-                    prefixed = self.prefix + name
-
-                if prefixed in self.parent.loaded_doc._data:
-                    object.__setattr__(self, name,
-                            self.parent.loaded_doc._data[prefixed])
-
-            return object.__getattribute__(self, name)
+    def __getattr__(self, name):
+        return self._arg_loader(name)
 
 
 class LazyDocument(object):
     def __init__(self, state_machine, doc):
         self._sm = state_machine
 
-        self.original_doc = doc
-        self.loaded_doc = None
-        self.loaded = False
+        self._original_doc = doc
+        self._loaded_doc = None
+        self._loaded = False
 
         self.type = doc.type
         self.self = doc.self
 
-        self.meta = LazyProperties(doc.meta, parent=self, prefix='$')
-        self.content = LazyProperties(doc.content, parent=self)
+        self.meta = LazyProperties(self._get_meta)
+        self.content = LazyProperties(self._get_content)
+
+    def _get_meta(self, attr_name):
+        if self._loaded:
+            return getattr(self._loaded_doc.meta, attr_name)
+        try:
+            return getattr(self._original_doc.meta, attr_name)
+        except AttributeError:
+            self._loaded = True
+            url = self._original_doc.self
+            self._loaded_doc = self._sm.load_document(url)
+            return self._get_meta(attr_name)
+
+    def _get_content(self, attr_name):
+        if self._loaded:
+            return getattr(self._loaded_doc.content, attr_name)
+        try:
+            return getattr(self._original_doc.content, attr_name)
+        except AttributeError:
+            url = self._original_doc.self
+            self._loaded_doc = self._sm.load_document(url)
+            return self._get_content(attr_name)
 
     def filter(self, name, **kwargs):
         return self._defer_method('filter', name, **kwargs)
@@ -165,11 +163,11 @@ class LazyDocument(object):
         return self._defer_method('page', page)
 
     def _defer_method(self, method_name, *args, **kwargs):
-        if self.loaded:
-            return getattr(self.loaded_doc, method_name)(*args, **kwargs)
+        if self._loaded:
+            return getattr(self._loaded_doc, method_name)(*args, **kwargs)
         try:
-            return getattr(self.original_doc, method_name)(*args, **kwargs)
+            return getattr(self._original_doc, method_name)(*args, **kwargs)
         except DocumentError:
-            self.loaded = True
-            self.loaded_doc = self._sm.load_document(self.original_doc.self)
+            self._loaded = True
+            self._loaded_doc = self._sm.load_document(self._original_doc.self)
             return self._defer_method(method_name, *args, **kwargs)
