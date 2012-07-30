@@ -143,6 +143,7 @@ class LazyDocument(object):
         try:
             return getattr(self._original_doc.content, attr_name)
         except AttributeError:
+            self._loaded = True
             url = self._original_doc.self
             self._loaded_doc = self._sm.load_document(url)
             return self._get_content(attr_name)
