@@ -1,9 +1,9 @@
 Getting started
 ============================================================
 
-This tutorial aims to get you started with resty as quickly as possible.
+This tutorial aims to get you started with :mod:`resty` as quickly as possible.
 
-It is made up of a number of examples of increasing complexity, each of which shows one or more useful resty features.
+It is made up of a number of examples of increasing complexity, each of which shows one or more useful :mod:`resty` features.
 
 If you have any comments about these tutorials, or suggestions for things we should cover in them, then please contact us via `Github <https://github.com/pbs/resty/>`_
 
@@ -13,14 +13,14 @@ Step 1: Configure the client
 
 :mod:`resty` provides two types of clients:
 
-* the default client - uses summaries if available therefore the interactions with the api are much faster
+* the default :mod:`client` - uses summaries if available therefore the interactions with the api are much faster
 
-* dumb_client - does not use summaries and relies strictly on links
+* :mod:`dumb_client` - does not use summaries and relies strictly on links
 
 
 .. Note::
 
-    Summary of the resource can be available as additional attributes on the collection
+    The summary is composed from all additional attributes (not required) that a minimum document representation has. The minimum documentation representation is used whenever a document has a relationship to another document.
 
 
 Step 2: Load the entrypoint and select a service
@@ -36,19 +36,19 @@ In the provided example we used http://services.pbs.org/ url as an entrypoint an
     >>> c
     <resty.types.Service object at 0x26abd10>
 
-    >>> zipcode_service = c.service("zipcodes")
+    >>> zipcode_collection = c.service("zipcodes")
     <resty.types.Collection object at 0x2597e90>
 
 
 .. Note::
 
-    The *$services* field is available only in the Service documents. The service field is used to describe all available services as top level collections.
+    The call to :mod:`c.service("zicpodes")` will select the top level collection named :mod:`zicpodes`
 
 
 Step 3: Use filters
 -------------------
 
-The *$filters* are used to describe complex interactions that usually require some sort of human input. One particularly common situation is searching trough the elements of a collection. Templates are available only in collections. Since *zipcode_service* returns a collection object we can filter it based on zip.
+The :mod:`filters` are used to describe complex interactions that usually require some sort of human input. One particularly common situation is searching trough the elements of a collection. Templates are available only in collections. Since :mod:`zipcode_service` returns a collection we can filter it based on zip.
 
 ::
 
@@ -57,13 +57,13 @@ The *$filters* are used to describe complex interactions that usually require so
 
 .. Note::
 
-    You need to pass to filter method the filter name (*zip*) and as **kwargs the placeholder name (*zipcodes*) with desired value (*22202*)
+    The :mod:`filter` method takes one positional argument that represents the filter name and a number of keyword arguments where the keys represent the placeholder names and the desired values.
 
 
 Step 4: Iterating through items
 -------------------------------
 
-Items represents the list of objects available in that collection. In the above example the *filtered_zipcodes* returns a collection with a single object. Let's select the first object from the list:
+Items represents the list of objects available in that collection. In the above example the :mod:`filtered_zipcodes` returns a collection with a single object. Let's select the first object from the list:
 
 ::
 
@@ -75,7 +75,7 @@ Items represents the list of objects available in that collection. In the above 
 Step 5: Accessing metadata and usefull content
 ----------------------------------------------
 
-At this point we have a *zipcode_resource* and we can extract informations like metadata and content specific informations
+At this point we have a :mod:`zipcode_resource` and we can extract informations like metadata and content specific informations
 
 ::
 
@@ -91,17 +91,10 @@ At this point we have a *zipcode_resource* and we can extract informations like 
     All properties which are prefixed with $ are considered metadata
 
 
-
 Step 6: Using links to interact with available relationships
 ------------------------------------------------------------
 
-The $links property groups together all the relationships the resource identified by the $self attribute that is located on the same level with the $links property has.
-
-The available relationships for the zipcode resource are:
-
-* search   -> returns callsigns for the current zipcode
-* related  -> returns states for the current zipcode
-* presence -> returns headens for the current zipcode
+Using the :mod:`related` method one can get from a document to a related document by specifying the relationship name.
 
 Let's see all the callsigns that are available for zipcode 22202 with their corresponding confidence:
 
@@ -127,12 +120,7 @@ Let's see all the callsigns that are available for zipcode 22202 with their corr
     WNED 0
 
 
-Conclusion
-----------
+.. Note::
 
-resty is:
-
-* simple high-level API interaction
-* easy to use
-* smart
-* supports multiple api rendering templates
+    The :mod:`related` method accepts two positionl arguments. First one the relationship name and the second one which is optional, the class name. In the above example we only used the relationship name but we can also pass the class name as follows:
+        >>>     print c.related('related', 'Callsign').content.callsign, c.content.confidence
