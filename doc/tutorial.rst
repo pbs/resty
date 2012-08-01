@@ -125,6 +125,7 @@ Conclusion
 
 resty is:
 
-* fast
+* simple high-level API interaction
 * easy to use
 * smart
+* supports multiple api rendering templates
