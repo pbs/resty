@@ -27,15 +27,22 @@ Step 2: Load the entrypoint and select a service
 ------------------------------------------------
 
 The URL where the Service document is located is named the API Entrypoint.
-In the provided example we use the sodor api url as an entrypoint and selecting the zipcode service from the available services.
+In the provided example we used http://services.pbs.org/ url as an entrypoint and selected the zipcodes service from the available services.
 
 ::
 
     >>> from resty import client
     >>> c = client.load("http://services.pbs.org/")
+    >>> c
+    <resty.types.Service object at 0x26abd10>
 
     >>> zipcode_service = c.service("zipcodes")
     <resty.types.Collection object at 0x2597e90>
+
+
+.. Note::
+
+    The *$services* field is available only in the Service documents. The service field is used to describe all available services as top level collections.
 
 
 Step 3: Use filters
