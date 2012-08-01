@@ -1,4 +1,4 @@
-Getting started
+Getting started tutorial
 ============================================================
 
 This tutorial aims to get you started with :mod:`resty` as quickly as possible.
@@ -122,5 +122,5 @@ Let's see all the callsigns that are available for zipcode 22202 with their corr
 
 .. Note::
 
-    The :mod:`related` method accepts two positionl arguments. First one the relationship name and the second one which is optional, the class name. In the above example we only used the relationship name but we can also pass the class name as follows:
+    The :mod:`related` method accepts two arguments. First one the relationship name and the second one the class name which uses a default value of None as a flag to signify the absense of the argument. In the above example we only used the relationship name but we can also pass the class name as follows:
         >>>     print c.related('related', 'Callsign').content.callsign, c.content.confidence
