@@ -42,7 +42,7 @@ In the provided example we used http://services.pbs.org/ url as an entrypoint an
 
 .. Note::
 
-    The call to :mod:`c.service("zicpodes")` will select the top level collection named :mod:`zicpodes`
+    The call to :mod:`c.service("zicpodes")` will select the top level collection named :mod:`zipcodes`
 
 
 Step 3: Use filters
@@ -123,4 +123,4 @@ Let's see all the callsigns that are available for zipcode 22202 with their corr
 .. Note::
 
     The :mod:`related` method accepts two arguments. First one the relationship name and the second one the class name which uses a default value of None as a flag to signify the absense of the argument. In the above example we only used the relationship name but we can also pass the class name as follows:
-        >>>     print c.related('related', 'Callsign').content.callsign, c.content.confidence
+    :mod:`print c.related('related', 'Callsign').content.callsign, c.content.confidence`
