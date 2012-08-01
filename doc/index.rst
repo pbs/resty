@@ -6,9 +6,9 @@
 Welcome to resty's documentation!
 =================================
 
-:mod:`resty` library provides user-friendly abstractions that allows you to easily interact with RESTfull API. This documentation contains guidance on how to install and use the library.
+``resty`` library provides user-friendly abstractions that allows you to easily interact with RESTfull API. This documentation contains guidance on how to install and use the library.
 
-:mod:`resty` is:
+``resty`` is:
 
 * simple high-level API interaction
 * easy to use

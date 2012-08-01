@@ -4,7 +4,7 @@ Installation
 This tutorial will walk you through the process of installing resty
 
 
-Install :mod:`resty`
+Install ``resty``
 ------------------------------
 
 The installation can be easy done by using the *easy_install*: ::
