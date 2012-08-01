@@ -6,8 +6,8 @@
 Welcome to resty's documentation!
 =================================
 
-:mod:`resty` is a library that allows you to easily write API interactions.
-This documentation provides guidance on how to install and
+:mod:`resty` library provides user-friendly abstractions that allows you to easily write API interactions.
+This documentation contains guidance on how to install and
 use the library.
 
 Contents:
