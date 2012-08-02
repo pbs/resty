@@ -9,3 +9,8 @@ Support and Documentation
 -------------------------
 
 For more documentation see: http://resty.readthedocs.org/en/latest/
+
+Build status
+------------
+
+.. image:: https://secure.travis-ci.org/pbs/resty.png?branch=master
