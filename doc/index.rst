@@ -6,7 +6,7 @@
 Welcome to resty's documentation!
 =================================
 
-``resty`` library provides user-friendly abstractions that allows you to easily interact with RESTfull API. This documentation contains guidance on how to install and use the library.
+``resty`` library provides user-friendly abstractions that allows you to easily interact with RESTful API. This documentation contains guidance on how to install and use the library.
 
 ``resty`` is:
 
