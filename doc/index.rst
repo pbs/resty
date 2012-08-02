@@ -13,7 +13,7 @@ Welcome to resty's documentation!
 * simple high-level API interaction
 * easy to use
 * smart
-* supports multiple api rendering templates
+
 
 Contents:
 
