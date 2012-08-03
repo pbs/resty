@@ -48,11 +48,11 @@ In the provided example we used ``http://services.pbs.org/`` url as an entrypoin
 Step 3: Use filters
 -------------------
 
-The ``filters`` are used to describe complex interactions that usually require some sort of human input. One particularly common situation is searching trough the elements of a collection. Templates are available only in collections. Since ``zipcode_service`` returns a collection we can filter it based on zip.
+The ``filters`` are used to describe complex interactions that usually require some sort of human input. One particularly common situation is searching trough the elements of a collection. Templates are available only in collections. Since ``zipcode_collection`` returns a collection we can filter it based on zip.
 
 ::
 
-    >>> filtered_zipcodes = zipcode_service.filter('zip', zipcode='22202')
+    >>> filtered_zipcodes = zipcode_collection.filter('zip', zipcode='22202')
 
 
 .. Note::
