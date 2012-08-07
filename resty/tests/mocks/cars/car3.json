@@ -1,0 +1,18 @@
+{
+    "model": "Mercedes",
+    "reg_number": "11113",
+    "available": "false",
+    "is_rented": "true",
+    "last_service_date": "20120211",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Car",
+    "$self": "cars/car3.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-collection+json",
+            "$relationship": "children",
+            "$self": "application/car3/all.json",
+            "$elements": "Application"
+        }
+    ]
+}

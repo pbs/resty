@@ -1,0 +1,18 @@
+{
+    "address": "Beacon Street, MA",
+    "date_of_birth": "19800112",
+    "licence_number": "31111",
+    "name": "John Smith",
+    "bad_history_level": "2",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Customer",
+    "$self": "customers/customer2.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-collection+json",
+            "$relationship": "children",
+            "$self": "application/customer2/all.json",
+            "$elements": "Application"
+        }
+    ]
+}

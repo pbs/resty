@@ -1,0 +1,18 @@
+{
+    "model": "Opel",
+    "reg_number": "11111",
+    "available": "true",
+    "is_rented": "false",
+    "last_service_date": "20120731",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Car",
+    "$self": "cars/car1.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-collection+json",
+            "$relationship": "children",
+            "$self": "application/car1/all.json",
+            "$elements": "Application"
+        }
+    ]
+}

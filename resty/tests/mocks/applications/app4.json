@@ -1,0 +1,21 @@
+{
+    "status": "completed",
+    "number": "3",
+    "$type": "application/test.pbs-resource+json",
+    "$class": "Application",
+    "$self": "application/app4.json",
+    "$links": [
+        {
+            "$type": "application/test.pbs-resource+json",
+            "$relationship": "applied_by",
+            "$self": "customer/customer2.json",
+            "$elements": "Customer"
+        },
+        {
+            "$type": "application/test.pbs-resource+json",
+            "$relationship": "parent",
+            "$self": "car/car3.json",
+            "$elements": "Car"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "$type": "application/vnd.test-collection+json",
+    "items": [
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/customer3/app4.json"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/customer3/app5.json"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/customer3/app6.json"
+        },
+    ],
+    "$elements": "Application",
+    "$self": "application/customer3/all.json"
+}

@@ -1,0 +1,21 @@
+ -{
+    "status": "pending",
+    "number": "1",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Application",
+    "$self": "application/app6.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$relationship": "applied_by",
+            "$self": "customer/customer3.json",
+            "$elements": "Customer"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$relationship": "parent",
+            "$self": "car/car3.json",
+            "$elements": "Car"
+        }
+    ]
+}

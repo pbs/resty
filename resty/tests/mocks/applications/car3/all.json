@@ -1,0 +1,27 @@
+{
+    "$type": "application/vnd.test-collection+json",
+    "items": [
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/car3/app4.json"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/car3/app5.json"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/car3/app6.json"
+        },
+                {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "application/car3/app7.json"
+        },
+    ],
+    "$elements": "Application",
+    "$self": "application/car3/all.json"
+}
