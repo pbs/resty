@@ -1,6 +1,6 @@
 {
     "$type": "application/vnd.test-collection+json",
-    "items": [
+    "$items": [
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
