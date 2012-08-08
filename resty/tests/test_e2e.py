@@ -25,8 +25,15 @@ class TestClient(unittest.TestCase):
     def _get_target(self):
         return client
 
-    def test_available_services(self):
+    def test_available_cars(self):
         c = self._get_target()
         home = c.load('entrypoint.json')
         car_collection = home.service('cars')
         self.assertEqual(len(car_collection.items()), 3)
+
+    def test_car_model(self):
+        c = self._get_target()
+        home = c.load('entrypoint.json')
+        car_collection = home.service('cars')
+        c = car_collection.items()[0]
+        self.assertEqual(c.content.model, "Opel")
