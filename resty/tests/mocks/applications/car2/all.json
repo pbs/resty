@@ -4,9 +4,9 @@
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car2/app3.json"
+            "$self": "applications/app3.json"
         }
     ],
     "$elements": "Application",
-    "$self": "application/car2/all.json"
+    "$self": "applications/car2/all.json"
 }

@@ -38,10 +38,11 @@ class TestClient(unittest.TestCase):
         c = car_collection.items()[0]
         self.assertEqual(c.content.model, "Opel")
 
-    def test_applications_by_customer1(self):
+    def test_status_applications_by_customer1(self):
         c = self._get_target()
         home = c.load('entrypoint.json')
         customer_collection = home.service('customers')
         c3_resource = customer_collection.items()[0]
         related_app = c3_resource.related('children', 'Application')
-        self.assertEqual(len(related_app.items()), 2)
+        api_app_status = [r.content.status for r in related_app.items()]
+        self.assertEqual(api_app_status, ['pending', 'approved'])

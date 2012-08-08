@@ -4,24 +4,24 @@
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car3/app4.json"
+            "$self": "applications/app4.json"
         },
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car3/app5.json"
+            "$self": "applications/app5.json"
         },
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car3/app6.json"
+            "$self": "applications/app6.json"
         },
                 {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car3/app7.json"
+            "$self": "applications/app7.json"
         }
     ],
     "$elements": "Application",
-    "$self": "application/car3/all.json"
+    "$self": "applications/car3/all.json"
 }

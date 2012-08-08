@@ -4,14 +4,14 @@
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car1/app1.json"
+            "$self": "applications/app1.json"
         },
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
-            "$self": "application/car1/app2.json"
+            "$self": "applications/app2.json"
         }
     ],
     "$elements": "Application",
-    "$self": "application/car1/all.json"
+    "$self": "applications/car1/all.json"
 }
