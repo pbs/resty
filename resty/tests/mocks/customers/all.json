@@ -9,12 +9,12 @@
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Customer",
-            "$self": "customer/customer2.json"
+            "$self": "customers/customer2.json"
         },
         {
             "$type": "application/vnd.test-resource+json",
             "$class": "Customer",
-            "$self": "customer/customer3.json"
+            "$self": "customers/customer3.json"
         }
     ],
     "$elements": "Customer",
