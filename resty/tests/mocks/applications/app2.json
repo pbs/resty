@@ -1,5 +1,5 @@
 {
-    "status": "pending",
+    "status": "approved",
     "number": "2",
     "$type": "application/vnd.test-resource+json",
     "$class": "Application",
