@@ -20,7 +20,7 @@
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
             "$self": "application/car3/app7.json"
-        },
+        }
     ],
     "$elements": "Application",
     "$self": "application/car3/all.json"
