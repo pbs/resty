@@ -46,3 +46,10 @@ class TestClient(unittest.TestCase):
         related_app = c3_resource.related('children', 'Application')
         api_app_status = [r.content.status for r in related_app.items()]
         self.assertEqual(api_app_status, ['pending', 'approved'])
+
+    def test_application5_rental(self):
+        c = self._get_target()
+        app5_resource = c.load('applications/app5.json')
+        customer_name = app5_resource.related('applied_by').content.name
+        car_model = app5_resource.related('parent').content.model
+        self.assertEqual([customer_name, car_model], ['Donald Bob', 'Opel'])
