@@ -11,7 +11,7 @@
         {
             "$type": "application/vnd.test-collection+json",
             "$relationship": "children",
-            "$self": "application/car3/all.json",
+            "$self": "applications/car3/all.json",
             "$elements": "Application"
         }
     ]
