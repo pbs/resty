@@ -15,6 +15,11 @@
             "$type": "application/vnd.test-resource+json",
             "$class": "Application",
             "$self": "applications/app6.json"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$class": "Application",
+            "$self": "applications/app7.json"
         }
     ],
     "$elements": "Application",

@@ -47,9 +47,18 @@ class TestClient(unittest.TestCase):
         api_app_status = [r.content.status for r in related_app.items()]
         self.assertEqual(api_app_status, ['pending', 'approved'])
 
-    def test_application5_rental(self):
+    def test_application5_history(self):
         c = self._get_target()
         app5_resource = c.load('applications/app5.json')
         customer_name = app5_resource.related('applied_by').content.name
         car_model = app5_resource.related('parent').content.model
         self.assertEqual([customer_name, car_model], ['Donald Bob', 'Opel'])
+
+    def test_car2_rentals(self):
+        c = self._get_target()
+        car1_resource = c.load('cars/car2.json')
+        car1_applications = car1_resource.related('children')
+        api_applied_by = []
+        for c in car1_applications.items():
+            api_applied_by.append(c.related('applied_by').content.name)
+        self.assertEqual(api_applied_by, ['John Smith', 'Donald Bob'])

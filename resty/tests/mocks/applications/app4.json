@@ -1,18 +1,18 @@
 {
     "status": "completed",
     "number": "3",
-    "$type": "application/test.pbs-resource+json",
+    "$type": "application/vnd.test-resource+json",
     "$class": "Application",
     "$self": "applications/app4.json",
     "$links": [
         {
-            "$type": "application/test.pbs-resource+json",
+            "$type": "application/vnd.test-resource+json",
             "$relationship": "applied_by",
             "$self": "customers/customer2.json",
             "$elements": "Customer"
         },
         {
-            "$type": "application/test.pbs-resource+json",
+            "$type": "application/vnd.test-resource+json",
             "$relationship": "parent",
             "$self": "cars/car3.json",
             "$elements": "Car"
