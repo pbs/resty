@@ -8,13 +8,13 @@
         {
             "$type": "application/vnd.test-resource+json",
             "$relationship": "applied_by",
-            "$self": "customer/customer2.json",
+            "$self": "customers/customer2.json",
             "$elements": "Customer"
         },
         {
             "$type": "application/vnd.test-resource+json",
             "$relationship": "parent",
-            "$self": "car/car2.json",
+            "$self": "cars/car2.json",
             "$elements": "Car"
         }
     ]
