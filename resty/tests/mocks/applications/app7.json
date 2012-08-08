@@ -3,7 +3,7 @@
     "number": "1",
     "$type": "application/vnd.test-resource+json",
     "$class": "Application",
-    "$self": "application/app7.json",
+    "$self": "applications/app7.json",
     "$links": [
         {
             "$type": "application/vnd.test-resource+json",

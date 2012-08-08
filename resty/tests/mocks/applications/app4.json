@@ -3,7 +3,7 @@
     "number": "3",
     "$type": "application/test.pbs-resource+json",
     "$class": "Application",
-    "$self": "application/app4.json",
+    "$self": "applications/app4.json",
     "$links": [
         {
             "$type": "application/test.pbs-resource+json",

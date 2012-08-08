@@ -1,9 +1,9 @@
- -{
+{
     "status": "pending",
     "number": "1",
     "$type": "application/vnd.test-resource+json",
     "$class": "Application",
-    "$self": "application/app6.json",
+    "$self": "applications/app6.json",
     "$links": [
         {
             "$type": "application/vnd.test-resource+json",
