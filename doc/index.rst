@@ -22,7 +22,7 @@ Contents:
 
    installing
    tutorial
-   releases/index
+   releases
 
 
 
