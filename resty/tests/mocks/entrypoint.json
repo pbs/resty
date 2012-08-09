@@ -1,0 +1,18 @@
+{
+    "$type": "application/vnd.test-service+json",
+    "$services": {
+        "cars": {
+                "$type": "application/vnd.test-collection+json",
+                "$description": "Available cars",
+                "$elements": "Car",
+                "$self": "cars/all.json"
+        },
+        "customers": {
+                "$type": "application/vnd.test-collection+json",
+                "$description": "Available customers",
+                "$elements": "Customer",
+                "$self": "customers/all.json"
+        }
+    },
+    "$self": "entrypoint.json"
+}

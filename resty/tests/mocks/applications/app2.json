@@ -1,0 +1,21 @@
+{
+    "status": "approved",
+    "number": "2",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Application",
+    "$self": "applications/app2.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$relationship": "applied_by",
+            "$self": "customers/customer1.json",
+            "$elements": "Customer"
+        },
+        {
+            "$type": "application/vnd.test-resource+json",
+            "$relationship": "parent",
+            "$self": "cars/car1.json",
+            "$elements": "Car"
+        }
+    ]
+}
