@@ -42,8 +42,8 @@ class TestClient(unittest.TestCase):
         c = self._get_target()
         home = c.load('entrypoint.json')
         customer_collection = home.service('customers')
-        c3_resource = customer_collection.items()[0]
-        related_app = c3_resource.related('children', 'Application')
+        c1_resource = customer_collection.items()[0]
+        related_app = c1_resource.related('children', 'Application')
         api_app_status = [r.content.status for r in related_app.items()]
         self.assertEqual(api_app_status, ['pending', 'approved'])
 
@@ -56,9 +56,9 @@ class TestClient(unittest.TestCase):
 
     def test_car2_rentals(self):
         c = self._get_target()
-        car1_resource = c.load('cars/car2.json')
-        car1_applications = car1_resource.related('children')
+        car2_resource = c.load('cars/car2.json')
+        car2_applications = car2_resource.related('children')
         api_applied_by = []
-        for c in car1_applications.items():
+        for c in car2_applications.items():
             api_applied_by.append(c.related('applied_by').content.name)
         self.assertEqual(api_applied_by, ['John Smith', 'Donald Bob'])
