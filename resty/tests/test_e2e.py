@@ -1,6 +1,8 @@
 import os
 import unittest2 as unittest
-from resty import Client, LazyJsonDocument, Service, Collection, Resource
+from resty import (
+    Client, LazyJsonDocument, Service, Collection, Resource, JsonDocument
+)
 
 
 def disk_loader(uri):
@@ -11,18 +13,18 @@ def disk_loader(uri):
     return (mime_type, content)
 
 
-client = Client(disk_loader)
-client.register_document_parser('application/json', LazyJsonDocument)
-client.register_document('application/vnd.test-service+json', Service)
-client.register_document(
-    'application/vnd.test-collection+json', Collection
-)
-client.register_document('application/vnd.test-resource+json', Resource)
-
-
 class TestClient(unittest.TestCase):
 
     def _get_target(self):
+        client = Client(disk_loader)
+        client.register_document_parser('application/json', LazyJsonDocument)
+        client.register_document('application/vnd.test-service+json', Service)
+        client.register_document(
+            'application/vnd.test-collection+json', Collection
+        )
+        client.register_document(
+            'application/vnd.test-resource+json', Resource
+        )
         return client
 
     def test_available_cars(self):
@@ -62,3 +64,20 @@ class TestClient(unittest.TestCase):
         for c in car2_applications.items():
             api_applied_by.append(c.related('applied_by').content.name)
         self.assertEqual(api_applied_by, ['John Smith', 'Donald Bob'])
+
+
+class TestDumbClient(TestClient):
+
+    def _get_target(self):
+        dumb_client = Client(disk_loader)
+        dumb_client.register_document_parser('application/json', JsonDocument)
+        dumb_client.register_document(
+            'application/vnd.test-service+json', Service
+        )
+        dumb_client.register_document(
+            'application/vnd.test-collection+json', Collection
+        )
+        dumb_client.register_document(
+            'application/vnd.test-resource+json', Resource
+        )
+        return dumb_client
