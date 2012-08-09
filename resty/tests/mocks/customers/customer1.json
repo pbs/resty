@@ -1,0 +1,18 @@
+{
+    "address": "Cambridge Road, MA",
+    "date_of_birth": "19860731",
+    "licence_number": "21111",
+    "name": "John Doe",
+    "bad_history_level": "1",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Customer",
+    "$self": "customers/customer1.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-collection+json",
+            "$relationship": "children",
+            "$self": "applications/customer1/all.json",
+            "$elements": "Application"
+        }
+    ]
+}

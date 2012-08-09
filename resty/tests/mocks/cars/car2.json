@@ -1,0 +1,18 @@
+{
+    "model": "Dacia",
+    "reg_number": "11112",
+    "available": "true",
+    "is_rented": "false",
+    "last_service_date": "20120414",
+    "$type": "application/vnd.test-resource+json",
+    "$class": "Car",
+    "$self": "cars/car2.json",
+    "$links": [
+        {
+            "$type": "application/vnd.test-collection+json",
+            "$relationship": "children",
+            "$self": "applications/car2/all.json",
+            "$elements": "Application"
+        }
+    ]
+}
