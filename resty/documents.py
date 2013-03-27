@@ -24,6 +24,9 @@ class Properties(object):
                 object.__setattr__(self, name, self.data[prefixed])
             return object.__getattribute__(self, name)
 
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+
 
 class JsonDocument(object):
     def __init__(self, state_machine, data):
@@ -110,6 +113,12 @@ class LazyProperties(object):
 
     def __getattr__(self, name):
         return self._arg_loader(name)
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
 
 
 class LazyDocument(object):

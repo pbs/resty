@@ -13,6 +13,10 @@ class MockHttpLoader(object):
         return self._urls[url]
 
 
+class Attrs(object):
+    pass
+
+
 class MockDocument(object):
 
     def __init__(self, meta={}, content={}):
@@ -22,9 +26,6 @@ class MockDocument(object):
 
         if 'class' in meta:
             meta['class_'] = meta.pop('class')
-
-        class Attrs(object):
-            pass
 
         self.meta = Attrs()
         self.content = Attrs()

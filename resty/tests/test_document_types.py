@@ -63,6 +63,13 @@ class TestResource(unittest.TestCase):
         self.assertEqual(r.related('relationship2'), 'specialized R2')
 
 
+class TestPickledResoruce(TestResource):
+    def _make_one(self, *args, **kwargs):
+        one = super(TestPickledResoruce, self)._make_one(*args, **kwargs)
+        import pickle
+        return pickle.loads(pickle.dumps(one))
+
+
 class TestService(unittest.TestCase):
 
     def _get_target(self):
@@ -101,6 +108,13 @@ class TestService(unittest.TestCase):
         r = self._make_one(doc)
         self.assertEqual(r.service('s1'), 'specialized R1')
         self.assertEqual(r.service('s2'), 'specialized R2')
+
+
+class TestPickledService(TestService):
+    def _make_one(self, *args, **kwargs):
+        one = super(TestPickledService, self)._make_one(*args, **kwargs)
+        import pickle
+        return pickle.loads(pickle.dumps(one))
 
 
 class TestCollection(unittest.TestCase):
@@ -158,7 +172,9 @@ class TestCollection(unittest.TestCase):
         page3.add_item(MockDocument(meta={'type': 'T5'}))
 
         page1.meta.page_size = page2.meta.page_size = page3.meta.page_size = 2
-        page1.meta.items_count = page2.meta.items_count = page3.meta.items_count = 5
+        page1.meta.items_count = 5
+        page2.meta.items_count = 5
+        page3.meta.items_count = 5
         page1.meta.page, page2.meta.page, page3.meta.page = 1, 2, 3
 
         page1.add_page(1, page1)
@@ -182,3 +198,10 @@ class TestCollection(unittest.TestCase):
             'specialized T4',
             'specialized T5',
         ])
+
+
+class TestPickledCollection(TestCollection):
+    def _make_one(self, *args, **kwargs):
+        one = super(TestPickledCollection, self)._make_one(*args, **kwargs)
+        import pickle
+        return pickle.loads(pickle.dumps(one))
