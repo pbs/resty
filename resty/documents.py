@@ -57,7 +57,7 @@ class JsonDocument(object):
             raise ValueError
 
         filter_uri = self.meta.filters[name]
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             filter_uri = filter_uri.replace('{' + key + '}', value)
         return self._sm.load_document(filter_uri)
 
